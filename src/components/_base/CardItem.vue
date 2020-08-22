@@ -1,19 +1,24 @@
 <template>
   <b-row>
-    <b-col cols="4" v-for="(item, index) in products" :key="index">
+    <b-col
+      class="mb-5 text-left"
+      cols="12"
+      sm="6"
+      lg="4"
+      xl="4"
+      v-for="(item, index) in products"
+      :key="index"
+    >
       <b-card
-        v-bind:title="item.product_name"
         img-src="https://picsum.photos/600/300/?image=25"
         img-alt="Image"
-        img-top
+        no-body
         tag="article"
         style="max-width: 20rem;"
-        class="mb-2"
-      >
-        <b-card-text>{{item.product_price}}</b-card-text>
-
-        <b-button href="#" variant="primary">Go somewhere</b-button>
-      </b-card>
+        class
+      ></b-card>
+      <b-card-text class="mb-0">{{item.product_name}}</b-card-text>
+      <b-card-text>{{item.product_price}}</b-card-text>
     </b-col>
   </b-row>
 </template>
@@ -28,7 +33,7 @@ export default {
       count: 0,
       cart: [],
       page: 1,
-      limit: 9,
+      limit: 12,
       sort: '',
       products: []
     }
@@ -50,3 +55,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.card-img,
+.card {
+  border-bottom-right-radius: calc(0rem - 0px);
+  border-bottom-left-radius: calc(0rem - 0px);
+}
+</style>
