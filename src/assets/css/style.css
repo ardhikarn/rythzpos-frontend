@@ -1,8 +1,19 @@
+@font-face {
+  font-family: airbnb-light;
+  src: url('../airbnb/Light.ttf');
+}
+
+@font-face {
+  font-family: airbnb-bold;
+  src: url('../airbnb/ExtraBold.ttf');
+}
+
 .fa-bars,
 .foodItems,
 .search,
 .cart {
-  font-size: 25px;
+  font-size: 30px;
+  font-family: airbnb-bold;
 }
 .nav-header {
   box-shadow: 0px 0px 6px 1px rgba(190, 195, 202, 0.3);
@@ -20,4 +31,21 @@
 }
 .main-product {
   background-color: rgba(190, 195, 202, 0.3);
+}
+.img-order {
+  object-fit: cover;
+  width: 100%;
+  max-height: 100%;
+}
+
+/* button checkout */
+.text-white.my-3.py-2 {
+  background-color: #57cad5;
+  border: none;
+}
+
+/* button cancel */
+.text-white.py-2 {
+  background-color: #f24f8a;
+  border: none;
 }
