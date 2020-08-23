@@ -20,20 +20,49 @@
     </b-nav>
     <div class="content">
       <b-container fluid class="bv-example-row font-weight-bold">
-        <b-row align="center">
-          <b-col xl="8" class>
-            <b-row>
-              <b-col xl="1" lg="1" md="1" class="navside px-1">
-                <NavSide />
-              </b-col>
-              <b-col xl="11" lg="11" md="11" class="main-product">
-                <b-container class="bv-example-row my-4">
-                  <CardItem />
-                </b-container>
-              </b-col>
+        <b-row>
+          <b-col xl="8">
+            <b-row style="height:100%;">
+              <NavSide />
+              <CardItem />
             </b-row>
           </b-col>
-          <b-col xl="4">Cart</b-col>
+          <b-col xl="4">
+            <div>
+              <div class="mt-5" v-if="isShow">
+                <img src="../assets/img-product/food.png" alt="cart-empty" />
+                <h4 class="mb-0">Your cart is empty</h4>
+                <p>Please add some items from the menu</p>
+              </div>
+              <ListOrder />
+              <hr />
+              <div class="total-order-price">
+                <b-row>
+                  <b-col xl="6">
+                    <h4>Total</h4>
+                    *Belum termasuk ppn
+                  </b-col>
+                  <b-col class="text-right">
+                    Rp. 105.000
+                  </b-col>
+                </b-row>
+              </div>
+              <div class="button-checkout">
+                <b-button
+                  class="text-white my-3 py-2"
+                  style="width: 100%;"
+                  variant="danger"
+                  data-toggle="modal"
+                  data-target="#checkout"
+                >
+                  Checkout
+                </b-button>
+                <b-button class="text-white py-2" style="width: 100%;">
+                  Cancel
+                </b-button>
+              </div>
+            </div>
+          </b-col>
         </b-row>
       </b-container>
     </div>
@@ -43,15 +72,21 @@
 <script>
 import CardItem from '../components/_base/CardItem'
 import NavSide from '../components/_base/NavSide'
+import ListOrder from '../components/_base/ListOrder'
 
 export default {
   name: 'Home',
   components: {
     CardItem,
-    NavSide
+    NavSide,
+    ListOrder
+  },
+  data() {
+    return {
+      isShow: false
+    }
   }
 }
 </script>
 
-<style src="../assets/css/style.css">
-</style>
+<style src="../assets/css/style.css"></style>
