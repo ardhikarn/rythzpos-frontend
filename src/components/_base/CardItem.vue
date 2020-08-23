@@ -1,26 +1,30 @@
 <template>
-  <b-row>
-    <b-col
-      class="mb-5 text-left"
-      cols="12"
-      sm="6"
-      lg="4"
-      xl="4"
-      v-for="(item, index) in products"
-      :key="index"
-    >
-      <b-card
-        img-src="https://picsum.photos/600/300/?image=25"
-        img-alt="Image"
-        no-body
-        tag="article"
-        style="max-width: 20rem;"
-        class
-      ></b-card>
-      <b-card-text class="mb-0">{{item.product_name}}</b-card-text>
-      <b-card-text>{{item.product_price}}</b-card-text>
-    </b-col>
-  </b-row>
+  <b-col xl="11" lg="11" md="11" class="main-product">
+    <b-container class="bv-example-row my-4">
+      <b-row>
+        <b-col
+          class="mb-5 text-left"
+          cols="12"
+          sm="6"
+          lg="4"
+          xl="4"
+          v-for="(item, index) in products"
+          :key="index"
+        >
+          <b-card
+            img-src="https://picsum.photos/600/300/?image=25"
+            img-alt="Image"
+            no-body
+            tag="article"
+            style="max-width: 20rem;"
+            class
+          ></b-card>
+          <b-card-text class="mb-0">{{ item.product_name }}</b-card-text>
+          <b-card-text>{{ item.product_price }}</b-card-text>
+        </b-col>
+      </b-row>
+    </b-container>
+  </b-col>
 </template>
 
 <script>
@@ -33,7 +37,7 @@ export default {
       count: 0,
       cart: [],
       page: 1,
-      limit: 12,
+      limit: 6,
       sort: '',
       products: []
     }
@@ -47,10 +51,10 @@ export default {
         .get(
           `http://127.0.0.1:3000/product?page=${this.page}&limit=${this.limit}`
         )
-        .then((response) => {
+        .then(response => {
           this.products = response.data.data
         })
-        .catch((error) => console.log(error))
+        .catch(error => console.log(error))
     }
   }
 }
