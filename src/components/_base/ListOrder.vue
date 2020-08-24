@@ -1,6 +1,6 @@
-<template>
-  <div class="mt-4 mb-5">
-    <b-row>
+<!-- <template>
+  <div class="mt-4">
+    <b-row class="mb-4">
       <b-col xl="4" class="pr-0">
         <img src="../../assets/img-order/blackforest.jpg" class="img-order" />
       </b-col>
@@ -33,11 +33,36 @@
         </div>
       </b-col>
     </b-row>
+    <div class="total-order-price">
+      <b-row>
+        <b-col xl="6">
+          <h4>Total</h4>
+          *Belum termasuk ppn
+        </b-col>
+        <b-col class="text-right">
+          Rp. 105.000
+        </b-col>
+      </b-row>
+    </div>
+    <div class="button-checkout">
+      // button checkout and modal
+      <ModalCheckout />
+
+      <b-button class="text-white py-2 my-2">
+        Cancel
+      </b-button>
+    </div>
   </div>
 </template>
 
 <script>
+import ModalCheckout from './ModalCheckout'
+
 export default {
-  name: 'ListOrder'
+  name: 'ListOrder',
+  components: {
+    ModalCheckout
+  },
+  methods: {}
 }
-</script>
+</script>-->

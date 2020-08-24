@@ -1,4 +1,4 @@
-<template>
+<!--<template>
   <b-col xl="1" lg="1" md="1" class="navside px-1">
     <div vertical align="center">
       <div class="my-4">
@@ -20,4 +20,4 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped></style> -->

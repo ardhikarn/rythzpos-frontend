@@ -1,5 +1,5 @@
-<template>
-  <b-col xl="11" lg="11" md="11" class="main-product">
+<!-- <template>
+  <b-col xl="11" lg="11" md="10" class="main-product">
     <b-container class="bv-example-row my-4">
       <b-row>
         <b-col
@@ -12,13 +12,15 @@
           :key="index"
         >
           <b-card
-            img-src="https://picsum.photos/600/300/?image=25"
+            @click="increment(), addToCart(item)"
+            v-bind:img-src="require('../../assets/img-product/cappucino.jpg')"
             img-alt="Image"
             no-body
             tag="article"
-            style="max-width: 20rem;"
-            class
           ></b-card>
+          <div class="checklist" v-if="checklist">
+            <i class="far fa-check-circle text-white"></i>
+          </div>
           <b-card-text class="mb-0">{{ item.product_name }}</b-card-text>
           <b-card-text>{{ item.product_price }}</b-card-text>
         </b-col>
@@ -34,6 +36,8 @@ export default {
   name: 'CardItem',
   data() {
     return {
+      isEmpty: true,
+      checklist: false,
       count: 0,
       cart: [],
       page: 1,
@@ -46,6 +50,21 @@ export default {
     this.getProduct()
   },
   methods: {
+    addToCart(data) {
+      const addItemToCart = {
+        product_id: data.product_id,
+        product_name: data.product_name,
+        product_price: data.product_price,
+        product_image: data.product_image,
+        product_qty: 1
+      }
+      this.cart = [...this.cart, addItemToCart]
+      console.log(this.cart)
+    },
+    increment() {
+      console.log('clicked')
+      this.$emit('increment', 1)
+    },
     getProduct() {
       axios
         .get(
@@ -66,4 +85,16 @@ export default {
   border-bottom-right-radius: calc(0rem - 0px);
   border-bottom-left-radius: calc(0rem - 0px);
 }
-</style>
+
+.card-img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.checklist {
+  position: absolute;
+  font-size: 40px;
+  top: 28%;
+  left: 42%;
+}
+</style> -->
