@@ -12,7 +12,7 @@
 .foodItems,
 .search,
 .cart {
-  font-size: 30px;
+  font-size: 25px;
   font-family: airbnb-bold;
 }
 .nav-header {
@@ -39,13 +39,35 @@
 }
 
 /* button checkout */
-.text-white.my-3.py-2 {
+.text-white.mt-3.py-2.my-2,
+.add-btn {
   background-color: #57cad5;
   border: none;
+  width: 100%;
 }
 
 /* button cancel */
-.text-white.py-2 {
+.text-white.py-2.my-2 {
   background-color: #f24f8a;
   border: none;
+  width: 100%;
+}
+
+.card-img,
+.card {
+  border-bottom-right-radius: calc(0rem - 0px);
+  border-bottom-left-radius: calc(0rem - 0px);
+}
+
+.card-img {
+  height: 200px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.checklist {
+  position: absolute;
+  font-size: 40px;
+  top: 28%;
+  left: 42%;
 }
