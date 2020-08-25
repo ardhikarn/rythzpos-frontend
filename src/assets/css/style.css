@@ -23,6 +23,9 @@
   position: relative;
   top: 20%;
 }
+.search {
+  cursor: pointer;
+}
 .nav-foodItems {
   box-shadow: 1px 0px 3px rgba(190, 195, 202, 0.3);
 }
@@ -36,11 +39,11 @@
   object-fit: cover;
   width: 100%;
   max-height: 100%;
+  border-radius: 10px;
 }
 
 /* button checkout */
-.text-white.mt-3.py-2.my-2,
-.add-btn {
+.text-white.mt-3.py-2.my-2 {
   background-color: #57cad5;
   border: none;
   width: 100%;
@@ -68,6 +71,13 @@
 .checklist {
   position: absolute;
   font-size: 40px;
-  top: 28%;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.fa-check-circle {
+  position: absolute;
+  top: 40%;
   left: 42%;
 }
