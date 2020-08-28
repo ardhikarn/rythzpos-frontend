@@ -2,120 +2,124 @@
   <div class="home">
     <b-container fluid>
       <b-row align="center" class="header">
-        <b-col xl="8" class="col8-foodItems py-4">
-          <b-row>
-            <b-col xl="1" lg="1" cols="2">
-              <span class="fas fa-bars"></span>
-            </b-col>
-            <b-col xl="10" lg="10" cols="8" class="foodItems">Food Items</b-col>
-            <b-col xl="1" lg="1" cols="2" class="col-search">
-              <b-icon icon="search" class="search"></b-icon>
-            </b-col>
-          </b-row>
-        </b-col>
+        <b-col xl="1" lg="1" cols="2" class="fas fa-bars align-self-center"></b-col>
+        <b-col xl="6" lg="10" cols="8" class="foodItems align-self-center">Food Items</b-col>
+        <b-col xl="1" lg="1" cols="2" class="fas fa-search search align-self-center"></b-col>
         <b-col xl="4" class="cart py-4">
           Cart
-          <b-badge>{{countCart}}</b-badge>
+          <b-badge>{{ count() }}</b-badge>
         </b-col>
       </b-row>
       <b-row class="main">
-        <b-col xl="8">
-          <b-row style="height:100%;">
-            <b-col xl="1" class="navside px-0" align="center">
-              <img src="../assets/img-nav/fork.png" alt="Menu" class="my-5" />
-              <img src="../assets/img-nav/clipboard.png" alt="History" class="my-5" />
-              <img src="../assets/img-nav/add.png" alt="Add Menu" class="my-5" @click="showModal()" />
-            </b-col>
-            <b-col xl="11" class="main-product">
+        <b-col xl="1" class="navside" align="center" style="height:100%;">
+          <img src="../assets/img-nav/fork.png" alt="Menu" class="my-5" />
+          <a href="/history">
+            <img src="../assets/img-nav/clipboard.png" alt="History" class="my-5" />
+          </a>
+          <img src="../assets/img-nav/add.png" alt="Add Menu" class="my-5" @click="showModal()" />
+        </b-col>
+        <b-col xl="7" class="main-product" style="height:100%;">
+          <b-row>
+            <!-- SEARCH AND SORT -->
+            <b-col xl="12" class="my-5">
+              <!-- SORT -->
               <b-row>
-                <!-- search, sort -->
-                <b-col xl="12" class="my-5">
-                  <!-- DIPAKAI LAGI -->
-                  <!-- <b-form v-on:submit.prevent="searchProduct" inline>
-                    <b-input placeholder="Enter keyword" v-model="keyword"></b-input>
-                    <b-button variant="info" type="submit" class="ml-md-2">Search</b-button>
-
-                    <b-dropdown id="sort" :text="sortText" class="m-2 sort-btn" variant="info">
-                      <b-dropdown-item-button @click="sortCategory()" active>Category</b-dropdown-item-button>
-                      <b-dropdown-divider></b-dropdown-divider>
-                      <b-dropdown-group id="dropdown-group-1" header="Name">
-                        <b-dropdown-item-button @click="sortNameAsc()">A-Z</b-dropdown-item-button>
-                        <b-dropdown-item-button @click="sortNameDesc()">Z-A</b-dropdown-item-button>
-                      </b-dropdown-group>
-                      <b-dropdown-divider></b-dropdown-divider>
-                      <b-dropdown-group id="dropdown-group-2" header="Date">
-                        <b-dropdown-item-button @click="sortDateAsc()">Oldest</b-dropdown-item-button>
-                        <b-dropdown-item-button @click="sortDateDesc()">Newest</b-dropdown-item-button>
-                      </b-dropdown-group>
-                      <b-dropdown-divider></b-dropdown-divider>
-                      <b-dropdown-group id="dropdown-group-3" header="Price">
-                        <b-dropdown-item-button @click="sortPriceAsc()">Lowest</b-dropdown-item-button>
-                        <b-dropdown-item-button @click="sortPriceDesc()">Highest</b-dropdown-item-button>
-                      </b-dropdown-group>
-                    </b-dropdown>
-                  </b-form>-->
+                <b-col xl="7">
+                  <div class="text-right">
+                    <b-form @submit.prevent="searchProduct" inline>
+                      <b-input placeholder="Search Product" v-model="search"></b-input>
+                      <b-button type="submit" class="ml-2">Search</b-button>
+                    </b-form>
+                  </div>
                 </b-col>
-
-                <!-- card product -->
-                <b-col xl="12">
-                  <b-row>
-                    <!-- card product looping -->
-                    <b-col xl="4" v-for="(item, index) in products" :key="index" class="my-3">
-                      <b-card>
-                        <b-card
-                          v-bind:img-src="require('../assets/img-product/wiener.jpg')"
-                          img-alt="Image"
-                          no-body
-                          class
-                        >
-                          <!-- CHECKLIST -->
-                          <div class="checklist" v-if="checklist(item)">
-                            <i class="far fa-check-circle text-white"></i>
-                          </div>
-                        </b-card>
-                        <b-row class="m-1">
-                          <b-col xl="12" class="card-product-name p-0">
-                            <strong>{{ item.product_name }}</strong>
-                          </b-col>
-                          <b-col xl="12" class="card-product-price p-0">Rp. {{ item.product_price }}</b-col>
-                        </b-row>
-                        <!-- BUTTON ICON MAIN PRODUCT -->
-                        <template v-slot:footer>
-                          <b-row>
-                            <b-col xl="3">
-                              <span>
-                                <i class="fas fa-plus-circle icon-product" @click="addToCart(item)"></i>
-                              </span>
-                            </b-col>
-                            <b-col xl="3">
-                              <span>
-                                <i
-                                  class="fas fa-minus-circle icon-product"
-                                  @click="removeCart(item)"
-                                ></i>
-                              </span>
-                            </b-col>
-                            <b-col xl="3">
-                              <span>
-                                <i class="fas fa-edit icon-product" @click="editProduct(item)"></i>
-                              </span>
-                            </b-col>
-                            <b-col xl="3">
-                              <span>
-                                <i
-                                  @submit="deleteProduct"
-                                  class="fas fa-trash-alt icon-product"
-                                  @click="deleteProduct(item.product_id)"
-                                ></i>
-                              </span>
-                            </b-col>
-                          </b-row>
-                        </template>
-                      </b-card>
-                    </b-col>
-                  </b-row>
+                <!-- SEARCH -->
+                <b-col xl="5" class="text-right">
+                  <b-dropdown :text="sortText">
+                    <b-dropdown-group header="Name">
+                      <b-dropdown-item-button @click="sortAscByName()">A-Z</b-dropdown-item-button>
+                      <b-dropdown-item-button @click="sortDescByName()">Z-A</b-dropdown-item-button>
+                    </b-dropdown-group>
+                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-group header="Price">
+                      <b-dropdown-item-button @click="sortAscByPrice()">Highest</b-dropdown-item-button>
+                      <b-dropdown-item-button @click="sortDescByPrice()">Lowest</b-dropdown-item-button>
+                    </b-dropdown-group>
+                  </b-dropdown>
                 </b-col>
               </b-row>
+            </b-col>
+
+            <!-- card product -->
+            <b-col xl="12">
+              <b-row>
+                <!-- card product looping -->
+                <b-col xl="4" v-for="(item, index) in products" :key="index" class="my-3">
+                  <b-card>
+                    <b-card
+                      v-bind:img-src="
+                        require('../assets/img-product/wiener.jpg')
+                      "
+                      img-alt="Image"
+                      no-body
+                      class
+                    >
+                      <!-- CHECKLIST -->
+                      <div class="checklist" v-if="checklist(item)">
+                        <i class="far fa-check-circle text-white"></i>
+                      </div>
+                    </b-card>
+                    <b-row class="m-1">
+                      <b-col xl="12" class="card-product-name p-0">
+                        <strong>{{ item.product_name }}</strong>
+                      </b-col>
+                      <b-col xl="12" class="card-product-price p-0">Rp. {{ item.product_price }}</b-col>
+                    </b-row>
+                    <!-- BUTTON ICON MAIN PRODUCT -->
+                    <template v-slot:footer>
+                      <b-row>
+                        <b-col xl="4" align="center">
+                          <span v-if="!checkCart(item)">
+                            <i class="fas fa-plus-circle icon-product" @click="addToCart(item)"></i>
+                          </span>
+                          <span v-else>
+                            <i class="fas fa-minus-circle icon-product" @click="removeCart(item)"></i>
+                          </span>
+                        </b-col>
+                        <!-- <b-col xl="4" align="center">
+                          <span>
+                            <i class="fas fa-minus-circle icon-product" @click="removeCart(item)"></i>
+                          </span>
+                        </b-col>-->
+                        <b-col xl="4" align="center">
+                          <span>
+                            <i class="fas fa-edit icon-product" @click="editProduct(item)"></i>
+                          </span>
+                        </b-col>
+                        <b-col xl="4" align="center">
+                          <span>
+                            <i
+                              @submit="deleteProduct"
+                              class="fas fa-trash-alt icon-product"
+                              @click="deleteProduct(item.product_id)"
+                            ></i>
+                          </span>
+                        </b-col>
+                      </b-row>
+                    </template>
+                  </b-card>
+                </b-col>
+              </b-row>
+            </b-col>
+
+            <b-col xl="12" class="mt-5">
+              <b-pagination
+                align="center"
+                v-model="page"
+                :total-rows="totalData"
+                :per-page="limit"
+                @change="pageChange"
+                v-show="showPagination"
+              ></b-pagination>
             </b-col>
           </b-row>
         </b-col>
@@ -128,7 +132,7 @@
           </div>
 
           <!-- ORDER LIST -->
-          <b-card v-if="count() > 0" class="mt-3">
+          <b-card v-else class="mt-3">
             <b-row class="mb-4" v-for="(item, index) in cart" :key="index">
               <b-col xl="4" class="pr-0">
                 <img src="../assets/img-order/salmon.jpg" class="img-order" />
@@ -146,7 +150,7 @@
                       <b-col
                         xl="6"
                         class="text-right"
-                      >Rp. {{(item.product_price * item.product_qty)}}</b-col>
+                      >Rp. {{ item.product_price * item.product_qty }}</b-col>
                     </b-row>
                   </div>
                 </div>
@@ -157,14 +161,18 @@
                 <b-col xl="6">
                   <h5>Total</h5>*Belum termasuk ppn
                 </b-col>
-                <b-col xl="6" class="text-right">Rp. {{(countTotal())}}</b-col>
+                <b-col xl="6" class="text-right">Rp. {{ totalPrice() }}</b-col>
               </b-row>
             </div>
             <div class="button-checkout">
               <div>
-                <b-button class="text-white mt-3 py-2 my-2" v-b-modal.checkout>Checkout</b-button>
+                <b-button
+                  class="text-white mt-3 py-2 my-2"
+                  v-b-modal.checkout
+                  @click="addDataOrder(cart)"
+                >Print Order List</b-button>
               </div>
-              <b-button class="text-white py-2 my-2">Cancel</b-button>
+              <b-button class="text-white py-2 my-2" @click="cancelOrder()">Cancel</b-button>
             </div>
           </b-card>
         </b-col>
@@ -175,29 +183,29 @@
     <b-modal hide-footer class id="checkout" title="CHECKOUT">
       <b-row class="mb-2">
         <b-col lg="6" class="text-left">Cashier : Pevita Pearce</b-col>
-        <b-col lg="6" class="text-right">Receipt no:#010410919</b-col>
+        <b-col lg="6" class="text-right">Receipt no: #{{invoice}}</b-col>
       </b-row>
       <div class="modal-content">
         <div class="modal-body">
           <b-row v-for="(item, index) in cart" :key="index">
             <b-col lg="6" class="text-left">
-              <p>{{item.product_name}}</p>
+              <p>{{ item.product_name }} {{item.product_qty}}x (@{{item.product_price}})</p>
             </b-col>
             <b-col lg="6" class="text-right">
-              <p>{{item.product_price}}</p>
+              <p>Rp. {{ item.product_price * item.product_qty}}</p>
             </b-col>
           </b-row>
           <b-row>
             <b-col lg="6" class="text-left">Ppn 10%</b-col>
             <b-col lg="6" class="text-right">
-              Rp. 10.500
+              Rp. {{totalPrice() * 0.1}}
               <hr />
             </b-col>
-            <b-col lg="12" class="text-right">Total : Rp. 115.500</b-col>
+            <b-col lg="12" class="text-right">Total : Rp. {{totalPrice() + (totalPrice() * 0.1)}}</b-col>
             <b-col lg="12" class="text-left">Payment : Cash</b-col>
           </b-row>
           <div class="button-checkout">
-            <b-button class="text-white mt-3 py-2 my-2">Checkout</b-button>
+            <b-button @click="postOrder()" class="text-white mt-3 py-2 my-2">Checkout</b-button>
             <p class="mb-0 text-center">Or</p>
             <b-button class="text-white py-2 my-2">Send Email</b-button>
           </div>
@@ -205,7 +213,7 @@
       </div>
     </b-modal>
     <!-- MODAL ADD -->
-    <b-modal hide-footer ref="modal-product" title="DATA ITEM PRODUCT">
+    <b-modal hide-footer ref="modal-product" :title="modalHeader">
       <b-form @submit="addProduct">
         <b-row class="mb-3">
           <b-col xl="4" class="align-self-center">Category Id :</b-col>
@@ -214,13 +222,7 @@
               required
               v-model="form.category_id"
               id="inline-form-custom-select-pref"
-              :options="[
-                              { text: 'Choose...', value: null },
-                              1,
-                              2,
-                              3,
-                              4
-                            ]"
+              :options="[{ text: 'Choose...', value: null }, 1, 2, 3, 4]"
               :value="null"
             ></b-form-select>
           </b-col>
@@ -265,11 +267,7 @@
               required
               v-model="form.product_status"
               id="inline-form-custom-select-pref"
-              :options="[
-                              { text: 'Choose...', value: null },
-                              0,
-                              1
-                            ]"
+              :options="[{ text: 'Choose...', value: null }, 0, 1]"
               :value="null"
             ></b-form-select>
           </b-col>
@@ -306,10 +304,16 @@ export default {
     return {
       // getProduct
       products: [],
-      page: '',
-      limit: 30,
-      sort: '',
+      page: 1,
+      limit: 5,
       search: '',
+      sort: '',
+      ascDesc: '',
+
+      // pagination and sort
+      sortText: 'Sort',
+      totalData: 0,
+      showPagination: true,
 
       cart: [],
       form: {
@@ -319,17 +323,12 @@ export default {
         product_price: '',
         product_status: ''
       },
-      countCart: 0,
-      isUpdate: false
+      isUpdate: false,
+      modalHeader: '',
+      addOrders: [],
+      invoice: ''
       //     currentPage: 1,
       //     rows: 50,
-      //     formUpdate: {
-      //       category_id: '',
-      //       product_name: '',
-      //       product_image: '',
-      //       product_price: '',
-      //       product_status: ''
-      //     },
       //     product_id: ''
     }
   },
@@ -341,10 +340,11 @@ export default {
     getProduct() {
       axios
         .get(
-          `http://127.0.0.1:3000/product?page=${this.page}&limit=${this.limit}&sort=${this.sort}`
+          `http://127.0.0.1:3000/product?page=${this.page}&limit=${this.limit}&search=${this.search}&sort=${this.sort}&ascDesc=${this.ascDesc}`
         )
         .then((response) => {
           this.products = response.data.data
+          this.totalData = response.data.pagination.totalData
         })
         .catch((error) => error)
     },
@@ -357,11 +357,8 @@ export default {
         product_qty: 1
       }
       this.cart = [...this.cart, addItemToCart]
-      this.countCart += 1
-      console.log(this.cart)
     },
     removeCart(data) {
-      this.countCart -= 1
       return this.cart.splice(
         this.cart.findIndex((item) => item.product_id === data.product_id),
         1
@@ -373,22 +370,23 @@ export default {
     count() {
       return this.cart.length
     },
+    checkCart(data) {
+      return this.cart.some((item) => item.product_id === data.product_id)
+    },
     incrementQty(data) {
       data.product_qty += 1
-      this.countCart += 1
     },
     decrementQty(data) {
       if (data.product_qty === 1) {
         this.removeCart(data)
       } else {
         data.product_qty -= 1
-        this.countCart -= 1
       }
     },
-    countTotal() {
+    totalPrice() {
       let total = 0
       for (let i = 0; i < this.cart.length; i++) {
-        total += this.cart[i].product_price * this.cart[i].qty
+        total += this.cart[i].product_price * this.cart[i].product_qty
       }
       return total
     },
@@ -402,10 +400,10 @@ export default {
         product_price: '',
         product_status: ''
       }
+      this.modalHeader = 'ADD ITEM PRODUCT'
     },
     // untuk menambah product
     addProduct() {
-      console.log(this.form)
       axios
         .post('http://127.0.0.1:3000/product', this.form)
 
@@ -424,10 +422,10 @@ export default {
         product_status: data.product_status
       }
       this.product_id = data.product_id
+      this.modalHeader = 'EDIT ITEM PRODUCT'
       this.isUpdate = true
     },
     patchProduct() {
-      console.log(this.form)
       axios
         .patch(`http://127.0.0.1:3000/product/${this.product_id}`, this.form)
         .then((response) => {
@@ -437,13 +435,86 @@ export default {
         .catch((error) => error)
     },
     deleteProduct(productId) {
-      console.log(productId)
       axios
         .delete(`http://127.0.0.1:3000/product/${productId}`)
         .then((response) => {
           this.getProduct()
         })
         .catch((error) => error)
+    },
+    // === SEARCHING ===
+    searchProduct() {
+      this.getProduct()
+      this.sortText = 'Sort'
+    },
+
+    // === SORTING ===
+    sortAscByName() {
+      this.sortText = 'A - Z'
+      this.sort = 'product_name'
+      this.ascDesc = 'ASC'
+      this.page = 1
+      this.getProduct()
+      this.showPagination = true
+    },
+    sortDescByName() {
+      this.sortText = 'A - Z'
+      this.sort = 'product_name'
+      this.ascDesc = 'DESC'
+      this.page = 1
+      this.getProduct()
+      this.showPagination = true
+    },
+    sortAscByPrice() {
+      this.sortText = 'Highest Price'
+      this.sort = 'product_price'
+      this.ascDesc = 'DESC'
+      this.page = 1
+      this.showPagination = true
+      this.getProduct()
+    },
+    sortDescByPrice() {
+      this.sortText = 'Lowest Price'
+      this.sort = 'product_price'
+      this.ascDesc = 'ASC'
+      this.getProduct()
+      this.page = 1
+      this.showPagination = true
+    },
+
+    // PAGINATION
+    pageChange(value) {
+      this.page = value
+      this.getProduct()
+      this.scrollToTop()
+    },
+    scrollToTop() {
+      window.scrollTo(0, 0)
+    },
+
+    // CHECKOUT ORDER
+    addDataOrder(data) {
+      for (let i = 0; i < data.length; i++) {
+        const dataOrders = {
+          product_id: data[i].product_id,
+          order_qty: data[i].product_qty
+        }
+        this.addOrders = [...this.addOrders, dataOrders]
+      }
+    },
+    postOrder() {
+      axios
+        .post('http://127.0.0.1:3000/order', this.addOrders)
+        .then((response) => {
+          console.log(response)
+          this.invoice = response.data.data.invoice
+        })
+        .catch(() => {
+          console.log('error')
+        })
+    },
+    cancelOrder() {
+      this.cart = []
     }
   }
 }
