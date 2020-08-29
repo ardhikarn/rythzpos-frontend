@@ -3,9 +3,9 @@
     <b-container fluid>
       <b-row align="center" class="header">
         <b-col xl="1" lg="1" cols="2" class="fas fa-bars align-self-center"></b-col>
-        <b-col xl="6" lg="10" cols="8" class="foodItems align-self-center">Food Items</b-col>
+        <b-col xl="6" lg="7" cols="8" class="foodItems align-self-center">Food Items</b-col>
         <b-col xl="1" lg="1" cols="2" class="fas fa-search search align-self-center"></b-col>
-        <b-col xl="4" class="cart py-4">
+        <b-col xl="4" lg="3" cols="12" class="cart py-4">
           Cart
           <b-badge>{{ count() }}</b-badge>
         </b-col>
@@ -22,7 +22,7 @@
           <b-row>
             <!-- SEARCH AND SORT -->
             <b-col xl="12" class="my-5">
-              <!-- SORT -->
+              <!-- SEARCH -->
               <b-row>
                 <b-col xl="7">
                   <div class="text-right">
@@ -32,7 +32,7 @@
                     </b-form>
                   </div>
                 </b-col>
-                <!-- SEARCH -->
+                <!-- SORT -->
                 <b-col xl="5" class="text-right">
                   <b-dropdown :text="sortText">
                     <b-dropdown-group header="Name">
@@ -53,7 +53,14 @@
             <b-col xl="12">
               <b-row>
                 <!-- card product looping -->
-                <b-col xl="4" v-for="(item, index) in products" :key="index" class="my-3">
+                <b-col
+                  xl="4"
+                  lg="4"
+                  md="6"
+                  v-for="(item, index) in products"
+                  :key="index"
+                  class="my-3"
+                >
                   <b-card>
                     <b-card
                       v-bind:img-src="
@@ -64,7 +71,7 @@
                       class
                     >
                       <!-- CHECKLIST -->
-                      <div class="checklist" v-if="checklist(item)">
+                      <div class="checklist" v-if="checklistPlusMinus(item)">
                         <i class="far fa-check-circle text-white"></i>
                       </div>
                     </b-card>
@@ -77,25 +84,20 @@
                     <!-- BUTTON ICON MAIN PRODUCT -->
                     <template v-slot:footer>
                       <b-row>
-                        <b-col xl="4" align="center">
-                          <span v-if="!checkCart(item)">
+                        <b-col cols="4" align="center">
+                          <span v-if="!checklistPlusMinus(item)">
                             <i class="fas fa-plus-circle icon-product" @click="addToCart(item)"></i>
                           </span>
                           <span v-else>
                             <i class="fas fa-minus-circle icon-product" @click="removeCart(item)"></i>
                           </span>
                         </b-col>
-                        <!-- <b-col xl="4" align="center">
-                          <span>
-                            <i class="fas fa-minus-circle icon-product" @click="removeCart(item)"></i>
-                          </span>
-                        </b-col>-->
-                        <b-col xl="4" align="center">
+                        <b-col cols="4" align="center">
                           <span>
                             <i class="fas fa-edit icon-product" @click="editProduct(item)"></i>
                           </span>
                         </b-col>
-                        <b-col xl="4" align="center">
+                        <b-col cols="4" align="center">
                           <span>
                             <i
                               @submit="deleteProduct"
@@ -111,7 +113,8 @@
               </b-row>
             </b-col>
 
-            <b-col xl="12" class="mt-5">
+            <!-- PAGINATION -->
+            <b-col cols="12" class="mt-5">
               <b-pagination
                 align="center"
                 v-model="page"
@@ -123,7 +126,7 @@
             </b-col>
           </b-row>
         </b-col>
-        <b-col xl="4">
+        <b-col cols="4">
           <!-- EMPTY ORDER -->
           <div class="mt-5 text-center" v-if="count() < 1">
             <img src="../assets/img-product/food.png" alt="cart-empty" />
@@ -134,21 +137,21 @@
           <!-- ORDER LIST -->
           <b-card v-else class="mt-3">
             <b-row class="mb-4" v-for="(item, index) in cart" :key="index">
-              <b-col xl="4" class="pr-0">
+              <b-col cols="4" class="pr-0">
                 <img src="../assets/img-order/salmon.jpg" class="img-order" />
               </b-col>
-              <b-col xl="8">
+              <b-col cols="8">
                 <div class="d-flex flex-column justify-content-between" style="height:100%;">
                   <h3>{{ item.product_name }}</h3>
-                  <div xl="12">
+                  <div cols="12">
                     <b-row>
-                      <b-col xl="6">
+                      <b-col cols="6">
                         <button class="px-2" @click="decrementQty(item)">-</button>
                         <button class="px-2" disabled>{{ item.product_qty }}</button>
                         <button class="px-2" @click="incrementQty(item)">+</button>
                       </b-col>
                       <b-col
-                        xl="6"
+                        cols="6"
                         class="text-right"
                       >Rp. {{ item.product_price * item.product_qty }}</b-col>
                     </b-row>
@@ -158,19 +161,15 @@
             </b-row>
             <div class="total-order-price">
               <b-row>
-                <b-col xl="6">
+                <b-col cols="6">
                   <h5>Total</h5>*Belum termasuk ppn
                 </b-col>
-                <b-col xl="6" class="text-right">Rp. {{ totalPrice() }}</b-col>
+                <b-col cols="6" class="text-right">Rp. {{ totalPrice() }}</b-col>
               </b-row>
             </div>
             <div class="button-checkout">
               <div>
-                <b-button
-                  class="text-white mt-3 py-2 my-2"
-                  v-b-modal.checkout
-                  @click="addDataOrder(cart)"
-                >Print Order List</b-button>
+                <b-button class="text-white mt-3 py-2 my-2" @click="addDataOrder(cart)">Checkout</b-button>
               </div>
               <b-button class="text-white py-2 my-2" @click="cancelOrder()">Cancel</b-button>
             </div>
@@ -180,7 +179,7 @@
     </b-container>
 
     <!-- MODAL CHECKOUT -->
-    <b-modal hide-footer class id="checkout" title="CHECKOUT">
+    <b-modal hide-footer ref="modal-checkout" title="CHECKOUT BERHASIL">
       <b-row class="mb-2">
         <b-col lg="6" class="text-left">Cashier : Pevita Pearce</b-col>
         <b-col lg="6" class="text-right">Receipt no: #{{invoice}}</b-col>
@@ -205,19 +204,28 @@
             <b-col lg="12" class="text-left">Payment : Cash</b-col>
           </b-row>
           <div class="button-checkout">
-            <b-button @click="postOrder()" class="text-white mt-3 py-2 my-2">Checkout</b-button>
+            <b-button @click="closeModalCheckout()" class="text-white mt-3 py-2 my-2">Print Checkout</b-button>
             <p class="mb-0 text-center">Or</p>
             <b-button class="text-white py-2 my-2">Send Email</b-button>
           </div>
         </div>
       </div>
     </b-modal>
+
+    <!-- MODAL CONFIRM -->
+    <b-modal hide-footer ref="modal-confirm" title="Are You Sure ?">
+      <div class="text-right">
+        <b-button @click="closeModalConfirm()">Cancel</b-button>
+        <b-button @click="postOrder()" class="ml-2" variant="success">OK</b-button>
+      </div>
+    </b-modal>
+
     <!-- MODAL ADD -->
     <b-modal hide-footer ref="modal-product" :title="modalHeader">
-      <b-form @submit="addProduct">
+      <b-form @submit.prevent="addProduct">
         <b-row class="mb-3">
-          <b-col xl="4" class="align-self-center">Category Id :</b-col>
-          <b-col xl="8">
+          <b-col cols="4" class="align-self-center">Category Id :</b-col>
+          <b-col cols="8">
             <b-form-select
               required
               v-model="form.category_id"
@@ -228,8 +236,8 @@
           </b-col>
         </b-row>
         <b-row class="mb-3">
-          <b-col xl="4" class="align-self-center">Product Name :</b-col>
-          <b-col xl="8">
+          <b-col cols="4" class="align-self-center">Product Name :</b-col>
+          <b-col cols="8">
             <b-form-input
               required
               v-model="form.product_name"
@@ -239,8 +247,8 @@
           </b-col>
         </b-row>
         <b-row class="mb-3">
-          <b-col xl="4" class="align-self-center">Product Image :</b-col>
-          <b-col xl="8">
+          <b-col cols="4" class="align-self-center">Product Image :</b-col>
+          <b-col cols="8">
             <b-form-input
               required
               v-model="form.product_image"
@@ -250,8 +258,8 @@
           </b-col>
         </b-row>
         <b-row class="mb-3">
-          <b-col xl="4" class="align-self-center">Product Price :</b-col>
-          <b-col xl="8">
+          <b-col cols="4" class="align-self-center">Product Price :</b-col>
+          <b-col cols="8">
             <b-form-input
               required
               v-model="form.product_price"
@@ -261,8 +269,8 @@
           </b-col>
         </b-row>
         <b-row class="mb-3">
-          <b-col xl="4" class="align-self-center">Product Status :</b-col>
-          <b-col xl="8">
+          <b-col cols="4" class="align-self-center">Product Status :</b-col>
+          <b-col cols="8">
             <b-form-select
               required
               v-model="form.product_status"
@@ -305,7 +313,7 @@ export default {
       // getProduct
       products: [],
       page: 1,
-      limit: 5,
+      limit: 6,
       search: '',
       sort: '',
       ascDesc: '',
@@ -364,14 +372,11 @@ export default {
         1
       )
     },
-    checklist(data) {
+    checklistPlusMinus(data) {
       return this.cart.some((item) => item.product_id === data.product_id)
     },
     count() {
       return this.cart.length
-    },
-    checkCart(data) {
-      return this.cart.some((item) => item.product_id === data.product_id)
     },
     incrementQty(data) {
       data.product_qty += 1
@@ -402,6 +407,15 @@ export default {
       }
       this.modalHeader = 'ADD ITEM PRODUCT'
     },
+    closeModalCheckout() {
+      this.$refs['modal-checkout'].hide()
+      this.$refs['modal-confirm'].hide()
+      this.cart = []
+    },
+    closeModalConfirm() {
+      this.$refs['modal-confirm'].hide()
+    },
+
     // untuk menambah product
     addProduct() {
       axios
@@ -409,6 +423,7 @@ export default {
 
         .then((response) => {
           this.getProduct()
+          this.$refs['modal-product'].hide()
         })
         .catch((error) => error)
     },
@@ -444,6 +459,7 @@ export default {
     },
     // === SEARCHING ===
     searchProduct() {
+      this.$router.push(`?q=${this.search}`)
       this.getProduct()
       this.sortText = 'Sort'
     },
@@ -456,6 +472,7 @@ export default {
       this.page = 1
       this.getProduct()
       this.showPagination = true
+      this.$router.push(`?sortAsc=${this.sort}`)
     },
     sortDescByName() {
       this.sortText = 'A - Z'
@@ -464,6 +481,7 @@ export default {
       this.page = 1
       this.getProduct()
       this.showPagination = true
+      this.$router.push(`?sortDesc=${this.sort}`)
     },
     sortAscByPrice() {
       this.sortText = 'Highest Price'
@@ -472,6 +490,7 @@ export default {
       this.page = 1
       this.showPagination = true
       this.getProduct()
+      this.$router.push(`?Highest=${this.sort}`)
     },
     sortDescByPrice() {
       this.sortText = 'Lowest Price'
@@ -483,8 +502,9 @@ export default {
     },
 
     // PAGINATION
-    pageChange(value) {
-      this.page = value
+    pageChange(numbPage) {
+      this.$router.push(`?page=${numbPage}`)
+      this.page = numbPage
       this.getProduct()
       this.scrollToTop()
     },
@@ -501,6 +521,7 @@ export default {
         }
         this.addOrders = [...this.addOrders, dataOrders]
       }
+      this.$refs['modal-confirm'].show()
     },
     postOrder() {
       axios
@@ -508,6 +529,7 @@ export default {
         .then((response) => {
           console.log(response)
           this.invoice = response.data.data.invoice
+          this.$refs['modal-checkout'].show()
         })
         .catch(() => {
           console.log('error')
