@@ -95,7 +95,6 @@ export default {
       todayIncome: 0,
       qtyOrdersWeek: 0,
       yearsIncome: 0,
-      currentDate: new Date().toISOString().slice(0, 10),
 
       // CHART
       month: 'month',
@@ -120,9 +119,7 @@ export default {
     // TODAY INCOME
     getHistoryTodayIncome() {
       axios
-        .get(
-          `http://127.0.0.1:3000/history/todayincome?date=${this.currentDate}`
-        )
+        .get('http://127.0.0.1:3000/history/todayincome')
         .then((response) => {
           this.todayIncome = response.data.data[0].total_income
         })
