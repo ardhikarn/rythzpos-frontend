@@ -2,38 +2,29 @@
   <div class="home">
     <b-container fluid>
       <b-row align="center" class="header">
-        <b-col xl="1" lg="1" cols="2" class="fas fa-bars align-self-center"></b-col>
-        <b-col xl="6" lg="7" cols="8" class="foodItems align-self-center">Food Items</b-col>
-        <b-col xl="1" lg="1" cols="2" class="fas fa-search search align-self-center"></b-col>
+        <NavSide />
+        <b-col xl="6" lg="7" cols="8" class="foodItems align-self-center py-4">Food Items</b-col>
+        <b-col xl="1" lg="1" cols="2" class="fas fa-search search align-self-center py-4"></b-col>
         <b-col xl="4" lg="3" cols="12" class="cart py-4">
           Cart
           <b-badge>{{ count() }}</b-badge>
         </b-col>
       </b-row>
       <b-row class="main">
-        <b-col xl="1" class="navside" align="center" style="height:100%;">
-          <img src="../assets/img-nav/fork.png" alt="Menu" class="my-5" />
-          <a href="/history">
-            <img src="../assets/img-nav/clipboard.png" alt="History" class="my-5" />
-          </a>
-          <img src="../assets/img-nav/add.png" alt="Add Menu" class="my-5" @click="showModal()" />
-        </b-col>
-        <b-col xl="7" class="main-product" style="height:100%;">
+        <b-col xl="8" class="main-product" style="height:100%;">
           <b-row>
             <!-- SEARCH AND SORT -->
             <b-col xl="12" class="my-5">
               <!-- SEARCH -->
               <b-row>
-                <b-col xl="7">
-                  <div class="text-right">
-                    <b-form @submit.prevent="searchProduct" inline>
-                      <b-input placeholder="Search Product" v-model="search"></b-input>
-                      <b-button type="submit" class="ml-2">Search</b-button>
-                    </b-form>
-                  </div>
+                <b-col cols="9">
+                  <b-form @submit.prevent="searchProduct" inline>
+                    <b-input placeholder="Search Product" v-model="search"></b-input>
+                    <b-button type="submit" class="ml-2">Search</b-button>
+                  </b-form>
                 </b-col>
                 <!-- SORT -->
-                <b-col xl="5" class="text-right">
+                <b-col cols="3" class="text-right">
                   <b-dropdown :text="sortText">
                     <b-dropdown-group header="Name">
                       <b-dropdown-item-button @click="sortAscByName()">A-Z</b-dropdown-item-button>
@@ -126,7 +117,7 @@
             </b-col>
           </b-row>
         </b-col>
-        <b-col cols="4">
+        <b-col xl="4" lg="6" md="8" sm="10" cols="12" class="mx-auto">
           <!-- EMPTY ORDER -->
           <div class="mt-5 text-center" v-if="count() < 1">
             <img src="../assets/img-product/food.png" alt="cart-empty" />
@@ -298,16 +289,16 @@
 <script>
 import axios from 'axios'
 // import CardItem from '../components/_base/CardItem'
-// import NavSide from '../components/_base/NavSide'
+import NavSide from '../components/_base/NavSide'
 // import CartOrder from '../components/_base/CartOrder'
 
 export default {
   name: 'Home',
-  // components: {
-  //   // CardItem
-  //   // NavSide,
-  //   // CartOrder
-  // },
+  components: {
+    // CardItem
+    NavSide
+    // CartOrder
+  },
   data() {
     return {
       // getProduct
@@ -459,9 +450,16 @@ export default {
     },
     // === SEARCHING ===
     searchProduct() {
-      this.$router.push(`?q=${this.search}`)
-      this.getProduct()
-      this.sortText = 'Sort'
+      if (this.search === '') {
+        this.getProduct()
+        this.$router.push('/home')
+      } else {
+        this.limit = 12
+        this.getProduct()
+        this.sortText = 'Sort'
+        this.showPagination = false
+        this.$router.push(`?q=${this.search}`)
+      }
     },
 
     // === SORTING ===
