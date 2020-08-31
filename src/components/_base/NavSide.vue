@@ -5,7 +5,9 @@
       <b-container fluid>
         <b-row>
           <b-col cols="12">
-            <img src="../../assets/img-nav/fork.png" alt="Menu" class="my-5" />
+            <a href="/home">
+              <img src="../../assets/img-nav/fork.png" alt="Menu" class="my-5" />
+            </a>
           </b-col>
           <b-col cols="12">
             <a href="/history">
@@ -29,6 +31,21 @@
 
 <script>
 export default {
-  name: 'NavSide'
+  name: 'NavSide',
+  methods: {
+    showModal() {
+      this.isUpdate = false
+      this.$refs['modal-product'].show()
+      this.form = {
+        category_id: '',
+        product_name: '',
+        product_image: '',
+        product_price: '',
+        product_status: ''
+      }
+      this.modalHeader = 'ADD ITEM PRODUCT'
+      this.$emit('showModal')
+    }
+  }
 }
 </script>

@@ -38,7 +38,9 @@
         <b-col xl="12" class="my-5">
           <b-row class="chart mx-0">
             <b-col xl="6" class>
-              <h4 class="m-2">Revenue</h4>
+              <h4 class="m-2">
+                <strong>Revenue</strong>
+              </h4>
             </b-col>
             <b-col xl="6" class="text-right">
               <b-dropdown size="sm" id="dropdown-dropleft" dropleft :text="month" class="m-2">
@@ -54,7 +56,11 @@
         <!-- TABLE HISTORY -->
         <b-col xl="12" class="my-5">
           <b-row class="chart mx-0">
-            <b-col xl="6" class="my-1">Recent Order</b-col>
+            <b-col xl="6" class="my-1">
+              <h4>
+                <strong>Recent Order</strong>
+              </h4>
+            </b-col>
             <b-col xl="6" class="text-right my-1">
               <b-dropdown dropleft :text="periodOfTime">
                 <b-dropdown-item @click="getAllHistory()">All Time</b-dropdown-item>

@@ -2,9 +2,33 @@
   <div class="home">
     <b-container fluid>
       <b-row align="center" class="header">
-        <NavSide />
-        <b-col xl="6" lg="7" cols="8" class="foodItems align-self-center py-4">Food Items</b-col>
-        <b-col xl="1" lg="1" cols="2" class="fas fa-search search align-self-center py-4"></b-col>
+        <b-col sm="1" cols="2" class="align-self-center py-4">
+          <b-button v-b-toggle.my-sidebar class="fas fa-bars"></b-button>
+          <b-sidebar id="my-sidebar" shadow>
+            <b-container fluid>
+              <b-row>
+                <b-col cols="12">
+                  <img src="../assets/img-nav/fork.png" alt="Menu" class="my-5" />
+                </b-col>
+                <b-col cols="12">
+                  <a href="/history">
+                    <img src="../assets/img-nav/clipboard.png" alt="History" class="my-5" />
+                  </a>
+                </b-col>
+
+                <b-col cols="12">
+                  <img
+                    src="../assets/img-nav/add.png"
+                    alt="Add Menu"
+                    class="my-5 addProduct"
+                    @click="showModal()"
+                  />
+                </b-col>
+              </b-row>
+            </b-container>
+          </b-sidebar>
+        </b-col>
+        <b-col xl="7" lg="7" cols="8" class="foodItems align-self-center py-4">Food Items</b-col>
         <b-col xl="4" lg="3" cols="12" class="cart py-4">
           Cart
           <b-badge>{{ count() }}</b-badge>
@@ -137,9 +161,9 @@
                   <div cols="12">
                     <b-row>
                       <b-col cols="6">
-                        <button class="px-2" @click="decrementQty(item)">-</button>
-                        <button class="px-2" disabled>{{ item.product_qty }}</button>
-                        <button class="px-2" @click="incrementQty(item)">+</button>
+                        <button class="px-2 groupBtn" @click="decrementQty(item)">-</button>
+                        <button class="px-2 groupBtn" disabled>{{ item.product_qty }}</button>
+                        <button class="px-2 groupBtn" @click="incrementQty(item)">+</button>
                       </b-col>
                       <b-col
                         cols="6"
@@ -289,14 +313,14 @@
 <script>
 import axios from 'axios'
 // import CardItem from '../components/_base/CardItem'
-import NavSide from '../components/_base/NavSide'
+// import NavSide from '../components/_base/NavSide'
 // import CartOrder from '../components/_base/CartOrder'
 
 export default {
   name: 'Home',
   components: {
     // CardItem
-    NavSide
+    // NavSide
     // CartOrder
   },
   data() {
@@ -453,6 +477,8 @@ export default {
       if (this.search === '') {
         this.getProduct()
         this.$router.push('/home')
+        this.limit = 6
+        this.showPagination = true
       } else {
         this.limit = 12
         this.getProduct()
