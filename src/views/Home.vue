@@ -4,6 +4,11 @@
       <b-row align="center" class="header">
         <b-col sm="1" cols="2" class="align-self-center py-4">
           <b-button v-b-toggle.my-sidebar class="fas fa-bars"></b-button>
+          <NavSide @showModal1="showModal" />
+        </b-col>
+
+        <!-- <b-col sm="1" cols="2" class="align-self-center py-4">
+          <b-button v-b-toggle.my-sidebar class="fas fa-bars"></b-button>
           <b-sidebar id="my-sidebar" shadow>
             <b-container fluid>
               <b-row>
@@ -27,7 +32,7 @@
               </b-row>
             </b-container>
           </b-sidebar>
-        </b-col>
+        </b-col>-->
         <b-col xl="7" lg="7" cols="8" class="foodItems align-self-center py-4">Food Items</b-col>
         <b-col xl="4" lg="3" cols="12" class="cart py-4">
           Cart
@@ -312,15 +317,17 @@
 
 <script>
 import axios from 'axios'
+// import HeaderComp from '../components/_base/HeaderComp'
 // import CardItem from '../components/_base/CardItem'
-// import NavSide from '../components/_base/NavSide'
+import NavSide from '../components/_base/NavSide'
 // import CartOrder from '../components/_base/CartOrder'
 
 export default {
   name: 'Home',
   components: {
+    // HeaderComp
     // CardItem
-    // NavSide
+    NavSide
     // CartOrder
   },
   data() {
