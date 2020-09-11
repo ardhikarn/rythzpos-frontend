@@ -2,7 +2,10 @@
   <div class="about">
     <b-container fluid>
       <b-row align="center" class="header">
-        <NavSide />
+        <b-col sm="1" cols="2" class="align-self-center py-4">
+          <b-button v-b-toggle.my-sidebar class="fas fa-bars"></b-button>
+          <NavSide @showModal1="showModal" />
+        </b-col>
         <b-col sm="11" cols="10" class="cart py-4">History</b-col>
       </b-row>
       <b-row style="height:100%;" class="my-5">

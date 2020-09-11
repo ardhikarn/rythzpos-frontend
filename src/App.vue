@@ -4,6 +4,21 @@
   </div>
 </template>
 
+<script>
+import { mapActions } from 'vuex'
+
+export default {
+  name: 'App',
+  created() {
+    this.interceptorRequest()
+    this.interceptorResponse()
+  },
+  methods: {
+    ...mapActions(['interceptorRequest', 'interceptorResponse'])
+  }
+}
+</script>
+
 <style>
 @font-face {
   font-family: airbnb-light;
@@ -12,7 +27,7 @@
 
 @font-face {
   font-family: airbnb-bold;
-  src: url('./assets/airbnb/Light.ttf');
+  src: url('./assets/airbnb/Bold.ttf');
 }
 
 html,

@@ -1,0 +1,10 @@
+Input :
+A = 5
+B = 9
+
+jawaban
+[a, b] = [b, a];
+
+Output
+A = 9
+B = 5
