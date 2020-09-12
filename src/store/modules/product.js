@@ -7,7 +7,9 @@ export default {
     limit: 6,
     search: '',
     sort: 'product_name',
-    totalData: null
+    totalData: null,
+    cart: [],
+    invoice: ''
   },
   mutations: {
     setProduct(state, payload) {
@@ -22,6 +24,40 @@ export default {
     },
     setPage(state, payload) {
       state.page = payload
+    },
+    addToCart(state, payload) {
+      const addItemToCart = {
+        product_id: payload.product_id,
+        product_name: payload.product_name,
+        product_price: payload.product_price,
+        product_image: payload.product_image,
+        product_qty: 1
+      }
+      state.cart = [...state.cart, addItemToCart]
+    },
+    removeCart(state, payload) {
+      return state.cart.splice(
+        state.cart.findIndex(value => value.product_id === payload.product_id),
+        1
+      )
+    },
+    incrementQty(state, payload) {
+      const findId = state.cart.find(
+        value => value.product_id === payload.product_id
+      )
+      findId.product_qty += 1
+    },
+    decrementQty(state, payload) {
+      const findId = state.cart.find(
+        value => value.product_id === payload.product_id
+      )
+      findId.product_qty -= 1
+    },
+    cancelOrder(state) {
+      state.cart = []
+    },
+    setInvoice(state, payload) {
+      state.invoice = payload
     }
   },
   actions: {
@@ -84,6 +120,14 @@ export default {
             reject(error)
           })
       })
+    },
+    postOrder(context, payload) {
+      axios
+        .post('http://127.0.0.1:3000/order', payload)
+        .then(response => {
+          context.commit('setInvoice', response.data.data.invoice)
+        })
+        .catch(error => error.response)
     }
   },
   getters: {
@@ -101,6 +145,12 @@ export default {
     },
     getProductId(state) {
       return state.product_id
+    },
+    getCart(state) {
+      return state.cart
+    },
+    getInvoice(state) {
+      return state.invoice
     }
   }
 }
