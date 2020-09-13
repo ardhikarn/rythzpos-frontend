@@ -2,9 +2,10 @@
   <b-container class="mx-auto">
     <b-row class="align-items-center justify-content-center">
       <b-col xl="4" cols="9" class>
-        <h1 class="mb-3">Sign Up</h1>
+        <h1 class="my-3">Sign Up</h1>
         <p class="text-secondary mb-0">Sign up and start shopping</p>
         <hr />
+        <b-alert show variant="danger" v-show="isError" class="my-2 text-center">{{ error() }}</b-alert>
         <b-form @submit.prevent="addUser">
           <div class="input-field bg-light my-2 rounded-pill px-2">
             <i class="fas fa-user text-center"></i>
@@ -40,7 +41,9 @@
         </b-form>
         <h5 class="text-center my-5">
           Already have an account ?
-          <a href="/login">Sign In</a>
+          <router-link to="/login">
+            <span>Sign In</span>
+          </router-link>
         </h5>
       </b-col>
     </b-row>
@@ -48,7 +51,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Register',
@@ -62,7 +65,9 @@ export default {
       isError: false
     }
   },
+  computed: {},
   methods: {
+    ...mapGetters({ error: 'getErrorRegis' }),
     ...mapActions(['register']),
     addUser() {
       // const data = new FormData()

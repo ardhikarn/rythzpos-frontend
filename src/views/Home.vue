@@ -9,59 +9,125 @@
         <CountCart />
       </b-row>
       <b-row class="main">
-        <MainProduct />
+        <b-col xl="8" class="main-product" style="height:100%;">
+          <b-row>
+            <!-- SEARCH AND SORT -->
+            <b-col xl="12" class="my-3">
+              <!-- SEARCH -->
+              <b-row>
+                <b-col cols="9">
+                  <b-form @submit.prevent="searchProduct" inline>
+                    <b-input placeholder="Search Product" v-model="search"></b-input>
+                    <b-button type="submit" class="ml-2">Search</b-button>
+                  </b-form>
+                </b-col>
+                <!-- SORT -->
+                <b-col cols="3" class="text-right">
+                  <b-dropdown :text="sortText" v-show="!isSearch">
+                    <b-dropdown-group header="Name">
+                      <b-dropdown-item-button @click="sortBy('product_name ASC')">A-Z</b-dropdown-item-button>
+                      <b-dropdown-item-button @click="sortBy('product_name DESC')">Z-A</b-dropdown-item-button>
+                    </b-dropdown-group>
+                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-group header="Price">
+                      <b-dropdown-item-button @click="sortBy('product_price DESC')">Highest</b-dropdown-item-button>
+                      <b-dropdown-item-button @click="sortBy('product_price ASC')">Lowest</b-dropdown-item-button>
+                    </b-dropdown-group>
+                  </b-dropdown>
+                </b-col>
+              </b-row>
+            </b-col>
+
+            <!-- card product -->
+            <b-col xl="12">
+              <b-row>
+                <!-- card product looping -->
+                <b-col
+                  xl="4"
+                  lg="4"
+                  md="6"
+                  v-for="(item, index) in products"
+                  :key="index"
+                  class="my-3"
+                >
+                  <b-card>
+                    <b-card
+                      v-bind:img-src="
+                        'http://127.0.0.1:3000/' + item.product_image
+                      "
+                      img-alt="Image"
+                      no-body
+                      class
+                    >
+                      <!-- CHECKLIST -->
+                      <div class="checklist" v-if="checklistPlusMinus(item)">
+                        <i class="far fa-check-circle text-white"></i>
+                      </div>
+                    </b-card>
+                    <b-row class="m-1">
+                      <b-col xl="12" class="card-product-name p-0">
+                        <strong>{{ item.product_name }}</strong>
+                      </b-col>
+                      <b-col xl="12" class="card-product-price p-0">Rp. {{ item.product_price }}</b-col>
+                    </b-row>
+                    <!-- BUTTON ICON MAIN PRODUCT -->
+                    <template v-slot:footer>
+                      <b-row>
+                        <b-col cols="6" align="center">
+                          <span v-if="!checklistPlusMinus(item)">
+                            <p class="icon-product btn-sm btn-primary" @click="addToCart(item)">Add</p>
+                          </span>
+                          <span v-else>
+                            <p
+                              class="icon-product btn-sm btn-danger"
+                              @click="removeCart(item)"
+                            >Remove</p>
+                          </span>
+                        </b-col>
+                        <b-col cols="3" align="center">
+                          <span>
+                            <i
+                              class="fas fa-edit icon-product"
+                              v-if="user.user_role === 1"
+                              @click="editProduct(item)"
+                            ></i>
+                          </span>
+                        </b-col>
+                        <b-col cols="3" align="center">
+                          <span>
+                            <i
+                              class="fas fa-trash-alt icon-product"
+                              @click.prevent="deleteProduct(item)"
+                              v-if="user.user_role === 1"
+                            ></i>
+                          </span>
+                        </b-col>
+                      </b-row>
+                    </template>
+                  </b-card>
+                </b-col>
+              </b-row>
+            </b-col>
+
+            <!-- PAGINATION -->
+            <b-col cols="12" class="mt-5">
+              <b-pagination
+                align="center"
+                v-model="currentPage"
+                :total-rows="totalData"
+                :per-page="perLimit"
+                @change="pageChange"
+                v-show="!isSearch"
+              ></b-pagination>
+            </b-col>
+          </b-row>
+        </b-col>
         <!-- EMPTY ORDER -->
         <CartEmpty />
         <!-- ORDER LIST -->
         <CartList />
       </b-row>
     </b-container>
-
-    <!-- MODAL CHECKOUT -->
-    <b-modal hide-footer ref="modal-checkout" title="CHECKOUT BERHASIL">
-      <b-row class="mb-2">
-        <b-col lg="6" class="text-left">Cashier : Pevita Pearce</b-col>
-        <b-col lg="6" class="text-right">Receipt no: #{{ invoice }}</b-col>
-      </b-row>
-      <div class="modal-content">
-        <div class="modal-body">
-          <b-row v-for="(item, index) in cart" :key="index">
-            <b-col lg="6" class="text-left">
-              <p>
-                {{ item.product_name }} {{ item.product_qty }}x (@{{
-                item.product_price
-                }})
-              </p>
-            </b-col>
-            <b-col lg="6" class="text-right">
-              <p>Rp. {{ item.product_price * item.product_qty }}</p>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col lg="6" class="text-left">Ppn 10%</b-col>
-            <b-col lg="6" class="text-right">
-              Rp. {{ totalPrice() * 0.1 }}
-              <hr />
-            </b-col>
-            <b-col lg="12" class="text-right">Total : Rp. {{ totalPrice() + totalPrice() * 0.1 }}</b-col>
-            <b-col lg="12" class="text-left">Payment : Cash</b-col>
-          </b-row>
-          <div class="button-checkout">
-            <b-button @click="closeModalCheckout()" class="text-white mt-3 py-2 my-2">Print Checkout</b-button>
-            <p class="mb-0 text-center">Or</p>
-            <b-button class="text-white py-2 my-2">Send Email</b-button>
-          </div>
-        </div>
-      </div>
-    </b-modal>
-
-    <!-- MODAL CONFIRM -->
-    <b-modal hide-footer ref="modal-confirm" title="Are You Sure ?">
-      <div class="text-right">
-        <b-button @click="closeModalConfirm()">Cancel</b-button>
-        <b-button @click="postOrder()" class="ml-2" variant="success">OK</b-button>
-      </div>
-    </b-modal>
 
     <!-- MODAL ADD -->
     <b-modal hide-footer ref="modal-product" :title="modalHeader">
@@ -132,14 +198,43 @@
     </b-modal>
 
     <!-- SIDEBAR MENU -->
-    <Sidebar />
+    <b-sidebar id="my-sidebar" shadow style="width: 200px">
+      <b-container fluid>
+        <b-row class="text-center">
+          <b-col cols="12">
+            <p class="my-0">Welcome Back</p>
+            <h5>
+              <strong>{{ user.user_name }}</strong>
+            </h5>
+          </b-col>
+          <b-col cols="12">
+            <img src="@/assets/img-nav/fork.png" alt="Menu" class="my-5" />
+          </b-col>
+          <b-col cols="12">
+            <a href="/history">
+              <img src="@/assets/img-nav/clipboard.png" alt="History" class="my-5" />
+            </a>
+          </b-col>
+          <b-col cols="12">
+            <img
+              v-if="user.user_role === 1"
+              src="@/assets/img-nav/setting2.png"
+              alt="Add Menu"
+              class="my-5 addProduct"
+              @click="showModal()"
+            />
+          </b-col>
+          <b-col cols="12" class="my-5">
+            <a @click="logout">Logout</a>
+          </b-col>
+        </b-row>
+      </b-container>
+    </b-sidebar>
   </div>
 </template>
 
 <script>
 import CountCart from '../components/CountCart'
-import Sidebar from '../components/Sidebar'
-import MainProduct from '../components/MainProduct'
 import CartEmpty from '../components/CartEmpty'
 import CartList from '../components/CartList'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
@@ -148,28 +243,15 @@ export default {
   name: 'Home',
   components: {
     CountCart,
-    Sidebar,
-    MainProduct,
     CartEmpty,
     CartList
   },
   data() {
     return {
-      // getProduct
-      // products: [],
-      // page: 1,
-      // limit: 6,
-      // search: '',
+      search: '',
       isSearch: false,
-      // sort: '',
-      // ascDesc: '',
-
-      // pagination and sort
       sortText: 'Sort',
-      // totalData: 0,
       showPagination: true,
-
-      // cart: [],
       form: {
         category_id: '',
         product_name: '',
@@ -178,19 +260,17 @@ export default {
         product_status: ''
       },
       isUpdate: false,
-      modalHeader: ''
-      // addOrders: [],
-      // invoice: ''
-      //     currentPage: 1,
-      //     rows: 50,
-      // product_id: ''
+      modalHeader: '',
+      currentPage: 1
     }
   },
   computed: {
     ...mapGetters({
       page: 'getPage2',
-      limit: 'getLimit',
+      perLimit: 'getLimit',
+      sort: 'getSort',
       products: 'getProduct2',
+      totalData: 'getTotalData',
       productId: 'getProudctId',
       user: 'getUser',
       invoice: 'getInvoice',
@@ -198,7 +278,7 @@ export default {
     })
   },
   created() {
-    this.getProduct()
+    this.getProducts()
   },
   methods: {
     ...mapActions([
@@ -208,14 +288,17 @@ export default {
       'deleteProducts',
       'searchProducts'
     ]),
+    ...mapActions({ handleLogout: 'logout' }),
     handleFile(event) {
       this.form.product_image = event.target.files[0]
     },
-    ...mapActions({
-      logout: 'logout',
-      getProduct: 'getProducts'
-    }),
-    ...mapMutations(['setPage', 'setProductId']),
+    ...mapMutations([
+      'setPage',
+      'addToCart',
+      'removeCart',
+      'sortProduct',
+      'setLimit'
+    ]),
     addProduct() {
       const data = new FormData()
       data.append('category_id', this.form.category_id)
@@ -226,7 +309,7 @@ export default {
       this.postProducts(data)
         .then((response) => {
           this.$refs['modal-product'].hide()
-          this.getProduct()
+          this.getProducts()
         })
         .catch((error) => console.log(error))
     },
@@ -256,207 +339,77 @@ export default {
         form: data
       }
       this.patchProducts(setData)
-      // this.getProduct()
       this.isUpdate = false
       this.$refs['modal-product'].hide()
     },
     deleteProduct(data) {
       this.product_id = data.product_id
-      this.getProduct()
+      this.getProducts()
       this.deleteProducts(this.product_id)
+    },
+    logout() {
+      this.$bvModal
+        .msgBoxConfirm('logout account?', {
+          cancelVariant: 'danger',
+          okVariant: 'success',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
+        .then((value) => {
+          this.isLogout = value
+          this.isLogout ? this.handleLogout() : console.log(value)
+        })
     },
     searchProduct() {
       this.$router.push(`?q=${this.search}`)
-      this.sortText = 'Sort'
       if (this.search === '') {
-        this.getProduct()
+        this.getProducts()
         this.isSearch = false
       } else {
+        this.sortText = 'Sort'
         this.isSearch = true
         this.searchProducts(this.search)
-        this.showPagination = false
-        this.limit = 100
       }
     },
-    // deleteProduct(productId) {
-    //   axios
-    //     .delete(`http://127.0.0.1:3000/product/${productId}`)
-    //     .then((response) => {
-    //       this.getProduct()
-    //     })
-    //     .catch((error) => error)
-    // },
-    // getProduct untuk menampilkan card
-    // getProduct() {
-    //   axios
-    //     .get(
-    //       `http://127.0.0.1:3000/product?page=${this.page}&limit=${this.limit}&sort=${this.sort}`
-    //     )
-    //     .then((response) => {
-    //       this.products = response.data.data
-    //       this.totalData = response.data.pagination.totalData
-    //     })
-    //     .catch((error) => error)
-    // },
-    // addToCart(data) {
-    //   const addItemToCart = {
-    //     product_id: data.product_id,
-    //     product_name: data.product_name,
-    //     product_price: data.product_price,
-    //     product_image: data.product_image,
-    //     product_qty: 1
-    //   }
-    //   this.cart = [...this.cart, addItemToCart]
-    // },
-    // removeCart(data) {
-    //   return this.cart.splice(
-    //     this.cart.findIndex((item) => item.product_id === data.product_id),
-    //     1
-    //   )
-    // },
+    sortBy(data) {
+      if (data === 'product_name ASC') {
+        this.sortText = 'A-Z'
+      } else if (data === 'product_name DESC') {
+        this.sortText = 'Z-A'
+      } else if (data === 'product_price ASC') {
+        this.sortText = 'Lowest Price'
+      } else if (data === 'product_price DESC') {
+        this.sortText = 'Highest Price'
+      }
+      this.sortProduct(data)
+      this.getProducts()
+      this.$router.push(`?sort=${data}&p=${this.currentPage}`)
+    },
     checklistPlusMinus(data) {
       return this.cart.some((item) => item.product_id === data.product_id)
     },
-    // incrementQty(data) {
-    //   data.product_qty += 1
-    // },
-    // decrementQty(data) {
-    //   if (data.product_qty === 1) {
-    //     this.removeCart(data)
-    //   } else {
-    //     data.product_qty -= 1
-    //   }
-    // },
-    totalPrice() {
-      let total = 0
-      for (let i = 0; i < this.cart.length; i++) {
-        total += this.cart[i].product_price * this.cart[i].product_qty
+    showModal() {
+      this.isUpdate = false
+      this.$refs['modal-product'].show()
+      this.form = {
+        category_id: '',
+        product_name: '',
+        product_image: '',
+        product_price: '',
+        product_status: ''
       }
-      return total
-    },
-    // showModal() {
-    //   this.isUpdate = false
-    //   this.$refs['modal-product'].show()
-    //   this.form = {
-    //     category_id: '',
-    //     product_name: '',
-    //     product_image: '',
-    //     product_price: '',
-    //     product_status: ''
-    //   }
-    //   this.modalHeader = 'ADD ITEM PRODUCT'
-    // },
-    closeModalCheckout() {
-      this.$refs['modal-checkout'].hide()
-      this.$refs['modal-confirm'].hide()
-      this.cart = []
-    },
-    closeModalConfirm() {
-      this.$refs['modal-confirm'].hide()
-    },
-
-    // untuk menambah product
-    // addProduct() {
-    //   axios
-    //     .post('http://127.0.0.1:3000/product', this.form)
-
-    //     .then((response) => {
-    //       this.getProduct()
-    //       this.$refs['modal-product'].hide()
-    //     })
-    //     .catch((error) => error)
-    // },
-
-    // === SEARCHING ===
-    // searchProduct() {
-    //   if (this.search === '') {
-    //     this.getProduct()
-    //     this.$router.push('/home')
-    //     this.limit = 6
-    //     this.showPagination = true
-    //   } else {
-    //     this.limit = 12
-    //     this.getProduct()
-    //     this.sortText = 'Sort'
-    //     this.showPagination = false
-    //     this.$router.push(`?q=${this.search}`)
-    //   }
-    // },
-
-    // === SORTING ===
-    sortAscByName() {
-      this.sortText = 'A - Z'
-      this.sort = 'product_name'
-      this.ascDesc = 'ASC'
-      this.setPage(1)
-      this.getProduct()
-      this.showPagination = true
-      this.$router.push(`?sortAsc=${this.sort}`)
-    },
-    sortDescByName() {
-      this.sortText = 'A - Z'
-      this.sort = 'product_name'
-      this.ascDesc = 'DESC'
-      this.setPage(1)
-      this.getProduct()
-      this.showPagination = true
-      this.$router.push(`?sortDesc=${this.sort}`)
-    },
-    sortAscByPrice() {
-      this.sortText = 'Highest Price'
-      this.sort = 'product_price'
-      this.ascDesc = 'DESC'
-      this.setPage(1)
-      this.showPagination = true
-      this.getProduct()
-      this.$router.push(`?Highest=${this.sort}`)
-    },
-    sortDescByPrice() {
-      this.sortText = 'Lowest Price'
-      this.sort = 'product_price'
-      this.ascDesc = 'ASC'
-      this.getProduct()
-      this.setPage(1)
-      this.showPagination = true
+      this.modalHeader = 'ADD ITEM PRODUCT'
     },
 
     // PAGINATION
     pageChange(numbPage) {
       this.$router.push(`?page=${numbPage}`)
-      // this.page = numbPage
       this.setPage(numbPage)
-      this.getProduct()
-      // this.scrollToTop()
-    },
-    scrollToTop() {
-      window.scrollTo(0, 0)
+      this.getProducts()
     }
-
-    // CHECKOUT ORDER
-    // addDataOrder(data) {
-    //   for (let i = 0; i < data.length; i++) {
-    //     const dataOrders = {
-    //       product_id: data[i].product_id,
-    //       order_qty: data[i].product_qty
-    //     }
-    //     this.addOrders = [...this.addOrders, dataOrders]
-    //   }
-    //   this.$refs['modal-confirm'].show()
-    // }
-    // postOrder() {
-    //   axios
-    //     .post('http://127.0.0.1:3000/order', this.addOrders)
-    //     .then((response) => {
-    //       this.invoice = response.data.data.invoice
-    //       this.$refs['modal-checkout'].show()
-    //     })
-    //     .catch((error) => error)
-    // }
-    // cancelOrder() {
-    //   this.cart = []
-    // }
   }
 }
 </script>
 
-<style scoped src="../assets/css/style.css"></style>
+<style src="../assets/css/style.css"></style>

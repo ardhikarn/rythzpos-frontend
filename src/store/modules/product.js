@@ -16,6 +16,9 @@ export default {
       state.products = payload.data
       state.totalData = payload.pagination.totalData
     },
+    setLimit(state, payload) {
+      state.limit = payload
+    },
     setSearchResult(state, payload) {
       state.products = payload
     },
@@ -121,11 +124,13 @@ export default {
           })
       })
     },
-    postOrder(context, payload) {
+    postOrders(context, payload) {
       axios
         .post('http://127.0.0.1:3000/order', payload)
         .then(response => {
+          // console.log(response.data)
           context.commit('setInvoice', response.data.data.invoice)
+          // context.commit('delData', response.data)
         })
         .catch(error => error.response)
     }

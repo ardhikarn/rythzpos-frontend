@@ -3,8 +3,10 @@
     <b-container fluid>
       <b-row class="text-center">
         <b-col cols="12">
-          Welcome Back
-          <strong>{{ user.user_name }}</strong>
+          <h5>Welcome Back</h5>
+          <h4>
+            <strong>{{ user.user_name }}</strong>
+          </h4>
         </b-col>
         <b-col cols="12">
           <img src="../assets/img-nav/fork.png" alt="Menu" class="my-5" />
@@ -14,7 +16,7 @@
             <img src="../assets/img-nav/clipboard.png" alt="History" class="my-5" />
           </a>
         </b-col>
-        <b-col cols="12">
+        <b-col cols="12" v-if="user.user_role === 1">
           <img
             src="../assets/img-nav/setting2.png"
             alt="Add Menu"

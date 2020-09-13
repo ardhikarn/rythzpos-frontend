@@ -5,19 +5,23 @@ export default {
   state: {
     user: {},
     token: localStorage.getItem('token') || null,
-    errorLogin: ''
+    errorLogin: '',
+    errorRegis: ''
   },
   mutations: {
     setUser(state, payload) {
       state.user = payload
       state.token = payload.token
     },
-    setError(state, payload) {
-      state.errorLogin = payload
-    },
     delUser(state) {
       state.user = {}
       state.token = null
+    },
+    setError(state, payload) {
+      state.errorLogin = payload
+    },
+    setErrorRegis(state, payload) {
+      state.errorRegis = payload
     }
   },
   actions: {
@@ -95,6 +99,12 @@ export default {
     },
     getUser(state) {
       return state.user
+    },
+    getError(state) {
+      return state.errorLogin
+    },
+    getErrorRegis(state) {
+      return state.errorRegis
     }
   }
 }

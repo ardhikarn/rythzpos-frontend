@@ -31,10 +31,57 @@
       </div>
       <div class="button-checkout">
         <div>
-          <b-button class="text-white mt-3 py-2 my-2" @click="addDataOrder(cart)">Checkout</b-button>
+          <b-button class="text-white mt-3 py-2 my-2" @click="addDataOrder()">Checkout</b-button>
         </div>
         <b-button class="text-white py-2 my-2" @click="cancelOrder()">Cancel</b-button>
       </div>
+      <!-- MODAL CONFIRM -->
+      <b-modal hide-footer ref="modal-confirm" title="Are You Sure ?">
+        <div class="text-right">
+          <b-button @click="closeModalConfirm()">Cancel</b-button>
+          <b-button @click="postOrder(cart), cancelOrder(cart)" class="ml-2" variant="success">OK</b-button>
+        </div>
+      </b-modal>
+      <!-- MODAL CHECKOUT -->
+      <b-modal hide-footer ref="modal-checkout" title="CHECKOUT BERHASIL">
+        <b-row class="mb-2">
+          <b-col lg="6" class="text-left">Cashier : Pevita Pearce</b-col>
+          <b-col lg="6" class="text-right">Receipt no: #{{ invoice }}</b-col>
+        </b-row>
+        <div class="modal-content">
+          <div class="modal-body">
+            <b-row v-for="(item, index) in cart" :key="index">
+              <b-col lg="6" class="text-left">
+                <p>
+                  {{ item.product_name }} {{ item.product_qty }}x (@{{
+                  item.product_price
+                  }})
+                </p>
+              </b-col>
+              <b-col lg="6" class="text-right">
+                <p>Rp. {{ item.product_price * item.product_qty }}</p>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="6" class="text-left">Ppn 10%</b-col>
+              <b-col lg="6" class="text-right">
+                Rp. {{ totalPrice() * 0.1 }}
+                <hr />
+              </b-col>
+              <b-col lg="12" class="text-right">Total : Rp. {{ totalPrice() + totalPrice() * 0.1 }}</b-col>
+              <b-col lg="12" class="text-left">Payment : Cash</b-col>
+            </b-row>
+            <div class="button-checkout">
+              <b-button
+                @click="closeModalCheckout()"
+                class="text-white mt-3 py-2 my-2"
+              >Print Checkout</b-button>
+              <p class="mb-0 text-center">Or</p>
+              <b-button class="text-white py-2 my-2">Send Email</b-button>
+            </div>
+          </div>
+        </div>
+      </b-modal>
     </b-card>
   </b-col>
 </template>
@@ -49,7 +96,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({ cart: 'getCart', user: 'getUser' })
+    ...mapGetters({ cart: 'getCart', user: 'getUser', invoice: 'getInvoice' })
   },
   methods: {
     ...mapMutations([
@@ -58,7 +105,7 @@ export default {
       'decrementQty',
       'cancelOrder'
     ]),
-    ...mapActions(['postOrder']),
+    ...mapActions(['postOrders']),
     minQty(data) {
       if (data.product_qty === 1) {
         this.removeCart(data)
@@ -74,6 +121,9 @@ export default {
       return total
     },
     addDataOrder(data) {
+      this.$refs['modal-confirm'].show()
+    },
+    postOrder(data) {
       for (let i = 0; i < data.length; i++) {
         const dataOrders = {
           product_id: data[i].product_id,
@@ -83,10 +133,18 @@ export default {
       }
       const setDataOrder = {
         user_id: this.user.user_id,
-        orders: this.setOrder
+        orders: this.addOrders
       }
-      this.postOrder(setDataOrder)
-      this.$refs['modal-confirm'].show()
+      console.log(setDataOrder)
+      this.postOrders(setDataOrder)
+      this.$refs['modal-checkout'].show()
+    },
+    closeModalConfirm() {
+      this.$refs['modal-confirm'].hide()
+    },
+    closeModalCheckout() {
+      this.$refs['modal-checkout'].hide()
+      this.$refs['modal-confirm'].hide()
     }
   }
 }

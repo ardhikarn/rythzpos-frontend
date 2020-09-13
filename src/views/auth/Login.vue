@@ -6,6 +6,7 @@
         <hr class="my-0" />
         <p class="text-secondary">Sign in to Your Account, before shopping</p>
         <hr />
+        <b-alert show variant="danger" v-show="isError" class="my-2 text-center">{{ error() }}</b-alert>
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
           <div class="input-field bg-light my-2 rounded-pill px-2">
             <i class="fas fa-user text-center"></i>
@@ -28,13 +29,15 @@
             />
           </div>
           <b-button type="submit" class="btn-block mt-4 py-2 rounded-pill">Log in</b-button>
-          <p class="warning text-center mt-2 mb-4" v-show="isError">{{ error() }}</p>
+          <b-button type="reset" class="btn-block mt-4 py-2 rounded-pill">Reset</b-button>
+          <!-- <alert class="text-center mt-2 mb-4" v-show="isError">{{ error() }}</alert> -->
           <p class="text-center my-1">or Forgot Password</p>
           <h5 class="text-center my-5">
             Don't have an account ?
-            <a href="/register">Sign Up</a>
+            <router-link to="/register">
+              <span>Sign Up</span>
+            </router-link>
           </h5>
-          <b-button type="reset">Reset</b-button>
         </b-form>
       </b-col>
     </b-row>
