@@ -2,11 +2,12 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import History from '../views/History.vue'
-import Setting from '../views/Setting.vue'
+import SetProduct from '../views/SetProduct.vue'
+import SetCategory from '../views/SetCategory.vue'
+import SetUser from '../views/SetUser.vue'
 import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
 import store from '../store/index'
-import Product from '../views/main/Product.vue'
 
 Vue.use(VueRouter)
 
@@ -24,9 +25,21 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/setting',
-    name: 'Setting',
-    component: Setting,
+    path: '/setproduct',
+    name: 'SetProduct',
+    component: SetProduct,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/setcategory',
+    name: 'SetCategory',
+    component: SetCategory,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/setuser',
+    name: 'SetUser',
+    component: SetUser,
     meta: { requiresAuth: true }
   },
   {
@@ -40,12 +53,6 @@ const routes = [
     name: 'Register',
     component: Register,
     meta: { requiresVisitor: true }
-  },
-  {
-    path: '/product',
-    name: 'Product',
-    component: Product,
-    meta: { requiresAuth: true }
   }
 ]
 

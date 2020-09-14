@@ -1,12 +1,16 @@
 <template>
-  <b-row>
-    <b-col cols="2" class="header-icon">
-      <img src="@/assets/img/menu.png" alt="toggle-menu" v-b-toggle.my-sidebar-backdrop />
+  <b-row class="header">
+    <b-col cols="1" class="align-self-center py-4">
+      <router-link to="/home" class="text-white">
+        <b-button variant="secondary" class="mb-2 px-1">
+          <b-icon icon="arrow-left" aria-hidden="true"></b-icon>
+          Home
+        </b-button>
+      </router-link>
     </b-col>
-    <b-col cols="8" class="header-text">
-      <h1>{{title}}</h1>
-    </b-col>
-    <b-col cols="2"></b-col>
+    <b-col align="center" cols="11" class="foodItems align-self-center py-4">{{
+      title
+    }}</b-col>
   </b-row>
 </template>
 

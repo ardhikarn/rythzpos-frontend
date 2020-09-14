@@ -39,13 +39,13 @@
       <b-modal hide-footer ref="modal-confirm" title="Are You Sure ?">
         <div class="text-right">
           <b-button @click="closeModalConfirm()">Cancel</b-button>
-          <b-button @click="postOrder(cart), cancelOrder(cart)" class="ml-2" variant="success">OK</b-button>
+          <b-button @click="postOrder(cart)" class="ml-2" variant="success">OK</b-button>
         </div>
       </b-modal>
       <!-- MODAL CHECKOUT -->
       <b-modal hide-footer ref="modal-checkout" title="CHECKOUT BERHASIL">
         <b-row class="mb-2">
-          <b-col lg="6" class="text-left">Cashier : Pevita Pearce</b-col>
+          <b-col lg="6" class="text-left">Cashier : {{ user.user_name }}</b-col>
           <b-col lg="6" class="text-right">Receipt no: #{{ invoice }}</b-col>
         </b-row>
         <div class="modal-content">
@@ -73,7 +73,7 @@
             </b-row>
             <div class="button-checkout">
               <b-button
-                @click="closeModalCheckout()"
+                @click="closeModalCheckout(), cancelOrder()"
                 class="text-white mt-3 py-2 my-2"
               >Print Checkout</b-button>
               <p class="mb-0 text-center">Or</p>
@@ -135,7 +135,6 @@ export default {
         user_id: this.user.user_id,
         orders: this.addOrders
       }
-      console.log(setDataOrder)
       this.postOrders(setDataOrder)
       this.$refs['modal-checkout'].show()
     },
@@ -145,6 +144,7 @@ export default {
     closeModalCheckout() {
       this.$refs['modal-checkout'].hide()
       this.$refs['modal-confirm'].hide()
+      this.cart = []
     }
   }
 }

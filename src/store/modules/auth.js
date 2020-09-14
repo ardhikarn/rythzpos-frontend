@@ -21,7 +21,7 @@ export default {
       state.errorLogin = payload
     },
     setErrorRegis(state, payload) {
-      state.errorRegis = payload
+      state.errorRegis = payload.data.message
     }
   },
   actions: {
@@ -53,6 +53,7 @@ export default {
       localStorage.removeItem('token')
       context.commit('delUser')
       router.push('/login')
+      sessionStorage.clear()
     },
     interceptorRequest(context) {
       axios.interceptors.request.use(

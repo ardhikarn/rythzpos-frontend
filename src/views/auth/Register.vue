@@ -1,13 +1,21 @@
 <template>
   <b-container class="mx-auto">
     <b-row class="align-items-center justify-content-center">
-      <b-col xl="4" cols="9" class>
-        <h1 class="my-3">Sign Up</h1>
+      <b-col xl="4" cols="9" class="my-5">
+        <h1>
+          <strong>Sign Up</strong>
+        </h1>
         <p class="text-secondary mb-0">Sign up and start shopping</p>
         <hr />
-        <b-alert show variant="danger" v-show="isError" class="my-2 text-center">{{ error() }}</b-alert>
+        <b-alert
+          show
+          variant="danger"
+          v-show="isError"
+          class="my-2 text-center"
+          >{{ error() }}</b-alert
+        >
         <b-form @submit.prevent="addUser">
-          <div class="input-field bg-light my-2 rounded-pill px-2">
+          <div class="input-field bg-light my-3 rounded-pill px-2">
             <i class="fas fa-user text-center"></i>
             <input
               required
@@ -17,7 +25,7 @@
               class="border-0"
             />
           </div>
-          <div class="input-field bg-light my-2 rounded-pill px-2">
+          <div class="input-field bg-light rounded-pill px-2">
             <i class="fas fa-envelope text-center"></i>
             <input
               required
@@ -37,7 +45,9 @@
               class="border-0"
             />
           </div>
-          <b-button type="submit" class="btn-block mt-4 py-2 rounded-pill">Sign up</b-button>
+          <b-button type="submit" class="btn-block mt-4 py-2 rounded-pill"
+            >Sign up</b-button
+          >
         </b-form>
         <h5 class="text-center my-5">
           Already have an account ?
@@ -67,18 +77,29 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapGetters({ error: 'getErrorRegis' }),
+    ...mapGetters({ error: 'getError' }),
     ...mapActions(['register']),
     addUser() {
-      // const data = new FormData()
-      // data.append('user_name', this.form.user_name)
-      // data.append('user_email', this.form.user_email)
-      // data.append('user_password', this.form.user_password)
       this.register(this.form)
-        .then((response) => {
-          this.$router.push('/login')
+        .then(response => {
+          this.$bvModal
+            .msgBoxOk(
+              <b-alert show variant="success">
+                Account Created, Contact Admin for Activation Account
+              </b-alert>,
+              {
+                title: 'Confirmation',
+                okVariant: 'success',
+                headerClass: 'p-2 border-bottom-0',
+                footerClass: 'p-2 border-top-0',
+                centered: true
+              }
+            )
+            .then(response => {
+              this.$router.push('/login')
+            })
         })
-        .then((error) => {
+        .catch(error => {
           this.isError = true
           console.log(error)
         })

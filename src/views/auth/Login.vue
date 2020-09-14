@@ -1,12 +1,21 @@
 <template>
   <b-container class="mx-auto">
     <b-row class="align-items-center justify-content-center">
-      <b-col xl="4" cols="9" class>
-        <h1 class="mb-3">Sign In</h1>
-        <hr class="my-0" />
-        <p class="text-secondary">Sign in to Your Account, before shopping</p>
+      <b-col xl="4" cols="9" class="my-5">
+        <h1>
+          <strong>Sign In</strong>
+        </h1>
+        <p class="text-secondary mb-0">
+          Sign in to Your Account, before shopping
+        </p>
         <hr />
-        <b-alert show variant="danger" v-show="isError" class="my-2 text-center">{{ error() }}</b-alert>
+        <b-alert
+          show
+          variant="danger"
+          v-show="isError"
+          class="my-2 text-center"
+          >{{ error() }}</b-alert
+        >
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
           <div class="input-field bg-light my-2 rounded-pill px-2">
             <i class="fas fa-user text-center"></i>
@@ -28,9 +37,12 @@
               v-model="form.user_password"
             />
           </div>
-          <b-button type="submit" class="btn-block mt-4 py-2 rounded-pill">Log in</b-button>
-          <b-button type="reset" class="btn-block mt-4 py-2 rounded-pill">Reset</b-button>
-          <!-- <alert class="text-center mt-2 mb-4" v-show="isError">{{ error() }}</alert> -->
+          <b-button type="submit" class="btn-block mt-4 py-2 rounded-pill"
+            >Sign in</b-button
+          >
+          <b-button type="reset" class="btn-block mt-4 py-2 rounded-pill"
+            >Reset</b-button
+          >
           <p class="text-center my-1">or Forgot Password</p>
           <h5 class="text-center my-5">
             Don't have an account ?
@@ -58,22 +70,15 @@ export default {
       isError: false
     }
   },
-  computed: {
-    // dataName() {
-    //   return this.$store.state.name
-    // } Cara 1
-    // ...mapState({ dataName: 'name' }) cara 2
-    // ...mapState(['name'])
-  },
   methods: {
     ...mapGetters({ error: 'getError' }),
     ...mapActions(['login']),
     onSubmit() {
       this.login(this.form)
-        .then((result) => {
+        .then(result => {
           this.$router.push('/home')
         })
-        .catch((error) => {
+        .catch(error => {
           this.isError = true
           console.log(error)
         })

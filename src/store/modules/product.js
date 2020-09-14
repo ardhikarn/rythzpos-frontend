@@ -6,7 +6,7 @@ export default {
     page: 1,
     limit: 6,
     search: '',
-    sort: 'product_name',
+    sort: 'product_id',
     totalData: null,
     cart: [],
     invoice: ''
