@@ -3,12 +3,27 @@
     <Header title="Setting Category" />
     <b-container class="my-4 bg-light">
       <b-row class="py-3">
-        <b-col cols="6">
-          <b-button variant="success" @click="addCategory()"
+        <b-col cols="8">
+          <b-button variant="secondary" @click="addCategory()"
             >Add Category</b-button
           >
         </b-col>
-        <b-col cols="6">Search Category</b-col>
+        <b-col cols="4">
+          <b-form-group>
+            <b-input-group>
+              <b-form-input
+                v-model="filter"
+                type="search"
+                placeholder="Search"
+              ></b-form-input>
+              <b-input-group-append>
+                <b-button :disabled="!filter" @click="filter = ''"
+                  >Clear</b-button
+                >
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
         <b-col cols="12" class="my-4">
           <b-table
             id="table_category"
@@ -19,25 +34,25 @@
             :fields="fields"
             :filter="filter"
             :filterIncludedFields="['category_name']"
-            :per-page="limit"
-            :current-page="currentPage"
             style="text-align: center"
           >
-            <template #cell(actions)="data">
+            <template #cell(actions)="item">
               <b-icon
-                icon="pencil"
+                scale="1.5"
+                icon="pencil-square"
+                variant="warning"
                 class="m-2 d-inline-block align-top img-edit"
                 alt="edit"
-                v-b-modal.modal-2
-                @click="setCategory(data)"
+                @click="editCategory(item)"
               />
               |
               <b-icon
+                scale="1.5"
                 icon="trash"
+                variant="danger"
                 class="m-2 d-inline-block align-top action-img"
                 alt="delete"
-                v-b-modal.modal-3
-                @click="showDelBoxCat(data)"
+                @click="confirmDelete(item)"
               />
             </template>
           </b-table>
@@ -55,7 +70,6 @@
             required
           ></b-form-input>
         </b-form-group>
-
         <b-form-group label-cols-sm="3" label="Status" label-for="nested-name">
           <b-form-input
             id="nested-name"
@@ -64,18 +78,25 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-button type="submit" variant="primary" v-if="!isUpdate"
+        <b-button
+          type="submit"
+          variant="success"
+          v-if="!isUpdate"
+          class="text-right"
           >Submit</b-button
         >
         <b-button
           type="button"
-          variant="primary"
+          variant="warning"
+          class="text-white"
           v-if="isUpdate"
-          @click="onUpdateCat()"
+          @click="onUpdate()"
           >Update</b-button
         >
       </b-form>
     </b-modal>
+
+    <!-- MODAL CONFIRM DELETE -->
   </b-container>
 </template>
 
@@ -98,9 +119,7 @@ export default {
         { key: 'category_updated_at', label: 'Updated', sortable: true },
         'Actions'
       ],
-      currentPage: 1,
       filter: null,
-      limit: 5,
       modalHeader: '',
       isUpdate: false,
       formCategory: []
@@ -113,7 +132,12 @@ export default {
     ...mapGetters({ itemCategory: 'getItemCategory' })
   },
   methods: {
-    ...mapActions(['getCategory', 'postCategory']),
+    ...mapActions([
+      'getCategory',
+      'postCategory',
+      'patchCategory',
+      'deleteCategory'
+    ]),
     addCategory() {
       this.formCategory = {
         category_name: '',
@@ -140,9 +164,62 @@ export default {
         .catch(error => {
           this.makeToast('danger', 'Error', error.data.message)
         })
+    },
+    editCategory(data) {
+      console.log(data)
+      this.$refs['modal-category'].show()
+      this.modalHeader = 'Edit Category'
+      this.isUpdate = true
+      this.formCategory = {
+        category_name: data.item.category_name,
+        category_status: data.item.category_status
+      }
+      console.log(this.formCategory)
+      this.category_id = data.item.category_id
+    },
+    onUpdate() {
+      const updateData = {
+        category_id: this.category_id,
+        formCategory: this.formCategory
+      }
+      this.patchCategory(updateData)
+        .then(response => {
+          this.getCategory()
+          this.makeToast(
+            'success',
+            'Success',
+            `Category ${this.category_id} Updated`
+          )
+          this.$refs['modal-category'].hide()
+        })
+        .catch(error => this.makeToast('danger', 'Error', error.data.message))
+    },
+    confirmDelete(data) {
+      this.$bvModal
+        .msgBoxConfirm(
+          `Are you sure want to delete Category ${data.item.category_name} ?`,
+          {
+            title: 'Delete Category',
+            okVariant: 'danger',
+            okTitle: 'YES',
+            cancelTitle: 'NO',
+            footerClass: 'p-2',
+            centered: true
+          }
+        )
+        .then(response => {
+          if (response === true) {
+            this.deleteCategory(data.item.category_id)
+            this.getCategory()
+            this.makeToast('success', 'Success', 'Category Deleted')
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
 }
 </script>
 
-<style scoped></style>
+<style src="../assets/css/style.css"></style>

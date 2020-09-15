@@ -33,6 +33,31 @@ export default {
           })
           .catch(error => reject(error.response))
       })
+    },
+    patchCategory(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .patch(
+            `http://127.0.0.1:3000/category/${payload.category_id}`,
+            payload.formCategory
+          )
+          .then(response => {
+            context.commit('clearHistory')
+            resolve(response.data)
+          })
+          .catch(error => reject(error.response))
+      })
+    },
+    deleteCategory(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`http://127.0.0.1:3000/category/${payload}`)
+          .then(response => {
+            context.commit('clearHistory')
+            resolve(response.data)
+          })
+          .catch(error => reject(error))
+      })
     }
   },
   getters: {
