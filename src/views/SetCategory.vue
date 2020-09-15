@@ -3,12 +3,12 @@
     <Header title="Setting Category" />
     <b-container class="my-4 bg-light">
       <b-row class="py-3">
-        <b-col cols="8">
+        <b-col cols="9">
           <b-button variant="secondary" @click="addCategory()"
             >Add Category</b-button
           >
         </b-col>
-        <b-col cols="4">
+        <b-col cols="3">
           <b-form-group>
             <b-input-group>
               <b-form-input
