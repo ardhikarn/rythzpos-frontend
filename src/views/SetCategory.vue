@@ -2,7 +2,7 @@
   <b-container fluid>
     <Header title="Setting Category" />
     <b-container class="my-4 bg-light">
-      <b-row class="py-3">
+      <b-row class="pt-3">
         <b-col cols="9">
           <b-button variant="secondary" @click="addCategory()"
             >Add Category</b-button
@@ -17,14 +17,17 @@
                 placeholder="Search"
               ></b-form-input>
               <b-input-group-append>
-                <b-button :disabled="!filter" @click="filter = ''"
+                <!-- <b-button :disabled="!filter" @click="filter = ''"
                   >Clear</b-button
-                >
+                > -->
+                <div class="btn bg-secondary" style="cursor: default">
+                  <b-icon icon="search" scale="1"></b-icon>
+                </div>
               </b-input-group-append>
             </b-input-group>
           </b-form-group>
         </b-col>
-        <b-col cols="12" class="my-4">
+        <b-col cols="12" class="mt-3">
           <b-table
             id="table_category"
             striped
@@ -33,12 +36,13 @@
             :items="itemCategory"
             :fields="fields"
             :filter="filter"
-            :filterIncludedFields="['category_name']"
-            style="text-align: center"
+            :filter-included-fields="['category_name']"
+            class="text-center"
           >
             <template #cell(actions)="item">
               <b-icon
-                scale="1.5"
+                style="cursor: pointer"
+                scale="1.3"
                 icon="pencil-square"
                 variant="warning"
                 class="m-2 d-inline-block align-top img-edit"
@@ -47,7 +51,8 @@
               />
               |
               <b-icon
-                scale="1.5"
+                style="cursor: pointer"
+                scale="1.3"
                 icon="trash"
                 variant="danger"
                 class="m-2 d-inline-block align-top action-img"
@@ -95,8 +100,6 @@
         >
       </b-form>
     </b-modal>
-
-    <!-- MODAL CONFIRM DELETE -->
   </b-container>
 </template>
 
@@ -122,7 +125,7 @@ export default {
       filter: null,
       modalHeader: '',
       isUpdate: false,
-      formCategory: []
+      formCategory: {}
     }
   },
   created() {
@@ -158,7 +161,7 @@ export default {
       this.postCategory(this.formCategory)
         .then(response => {
           this.getCategory()
-          this.makeToast('success', 'Success', 'Category Created')
+          this.makeToast('success', 'Success', response.message)
           this.$refs['modal-category'].hide()
         })
         .catch(error => {
@@ -166,7 +169,6 @@ export default {
         })
     },
     editCategory(data) {
-      console.log(data)
       this.$refs['modal-category'].show()
       this.modalHeader = 'Edit Category'
       this.isUpdate = true
@@ -174,7 +176,6 @@ export default {
         category_name: data.item.category_name,
         category_status: data.item.category_status
       }
-      console.log(this.formCategory)
       this.category_id = data.item.category_id
     },
     onUpdate() {
@@ -185,11 +186,7 @@ export default {
       this.patchCategory(updateData)
         .then(response => {
           this.getCategory()
-          this.makeToast(
-            'success',
-            'Success',
-            `Category ${this.category_id} Updated`
-          )
+          this.makeToast('success', 'Success', response.message)
           this.$refs['modal-category'].hide()
         })
         .catch(error => this.makeToast('danger', 'Error', error.data.message))
@@ -208,14 +205,16 @@ export default {
           }
         )
         .then(response => {
-          if (response === true) {
+          if (response) {
             this.deleteCategory(data.item.category_id)
-            this.getCategory()
-            this.makeToast('success', 'Success', 'Category Deleted')
+              .then(res => {
+                this.getCategory()
+                this.makeToast('success', 'Success', res.message)
+              })
+              .catch(error => {
+                this.makeToast('success', 'Success', error.data.message)
+              })
           }
-        })
-        .catch(error => {
-          console.log(error)
         })
     }
   }

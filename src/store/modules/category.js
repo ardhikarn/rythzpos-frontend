@@ -18,10 +18,15 @@ export default {
   },
   actions: {
     getCategory(context) {
-      axios
-        .get('http://127.0.0.1:3000/category')
-        .then(response => context.commit('setCategory', response.data.data))
-        .catch(error => console.log(error.response))
+      return new Promise((resolve, reject) => {
+        axios
+          .get('http://127.0.0.1:3000/category')
+          .then(response => {
+            context.commit('setCategory', response.data.data)
+            resolve(response.data)
+          })
+          .catch(error => reject(error.response))
+      })
     },
     postCategory(context, payload) {
       return new Promise((resolve, reject) => {

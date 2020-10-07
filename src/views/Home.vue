@@ -2,19 +2,20 @@
   <div class="home">
     <b-container fluid>
       <b-row align="center" class="header">
-        <b-col cols="2" class="align-self-center py-4">
+        <b-col cols="1" class="align-self-center py-4 px-2">
           <div v-b-toggle.my-sidebar>
             <b-avatar variant="secondary"> </b-avatar>
-            {{ user.user_name }}
+            <small v-if="user.user_role === 1"> Admin</small>
+            <small v-else> Cashier</small>
           </div>
         </b-col>
-        <b-col cols="6" class="foodItems align-self-center py-4"
+        <b-col cols="7" class="foodItems align-self-center py-4"
           >Caffeshop</b-col
         >
         <CountCart />
       </b-row>
       <b-row class="main">
-        <b-col xl="8" class="main-product" style="height:100%;">
+        <b-col xl="8" class="main-product" style="height: 100%">
           <b-row>
             <!-- SEARCH AND SORT -->
             <b-col xl="12" class="my-3">
@@ -231,21 +232,17 @@
     </b-modal>
 
     <!-- SIDEBAR MENU -->
-    <b-sidebar id="my-sidebar" title="Profile User" shadow style="width: 400px">
+    <b-sidebar id="my-sidebar" shadow style="width: 400px">
       <b-container fluid>
-        <b-row class="text-center px-0 py-2 ">
-          <b-col cols="12">
-            <b-avatar variant="secondary"> </b-avatar>
-            {{ user.user_name }}
-          </b-col>
-          <b-col cols="12" class="mt-5">
+        <b-row class="text-center px-0 py-2">
+          <!-- <b-col cols="12" class="mt-5">
             <router-link to="/home" class="text-white">
               <b-button variant="secondary" class="mb-2" style="width: 125px">
                 <b-icon icon="shop" aria-hidden="true"></b-icon>
                 Home
               </b-button>
             </router-link>
-          </b-col>
+          </b-col> -->
           <b-col cols="12" class="my-2">
             <router-link to="/history" class="text-white">
               <b-button variant="secondary" class="mb-2" style="width: 125px">
@@ -254,7 +251,7 @@
               </b-button>
             </router-link>
           </b-col>
-          <b-col cols="12" class="mb-5">
+          <b-col cols="12" class="mb-5" v-if="user.user_role === 1">
             <b-dropdown variant="secondary">
               <template v-slot:button-content>
                 <b-icon icon="gear-fill"></b-icon> Settings
@@ -368,11 +365,11 @@ export default {
       data.append('product_price', this.form.product_price)
       data.append('product_status', this.form.product_status)
       this.postProducts(data)
-        .then(response => {
+        .then((response) => {
           this.$refs['modal-product'].hide()
           this.getProducts()
         })
-        .catch(error => console.log(error))
+        .catch((error) => console.log(error))
     },
     editProduct(data) {
       this.$refs['modal-product'].show()
@@ -400,12 +397,12 @@ export default {
         form: data
       }
       this.patchProducts(setData)
-        .then(response => {
+        .then((response) => {
           this.$refs['modal-product'].hide()
           this.getProducts()
           this.isUpdate = false
         })
-        .catch(error => console.log(error))
+        .catch((error) => console.log(error))
     },
     deleteProduct(data) {
       this.product_id = data.product_id
@@ -421,19 +418,20 @@ export default {
           footerClass: 'p-2 border-top-0',
           centered: true
         })
-        .then(value => {
+        .then((value) => {
           this.isLogout = value
           this.isLogout ? this.handleLogout() : console.log(value)
         })
     },
     searchProduct() {
-      this.$router.push(`?q=${this.search}`)
       if (this.search === '') {
         this.getProducts()
         this.isSearch = false
+        this.$router.push('/home')
       } else {
         this.sortText = 'Sort'
         this.isSearch = true
+        this.$router.push(`?q=${this.search}`)
         this.searchProducts(this.search)
       }
     },
@@ -452,7 +450,7 @@ export default {
       this.$router.push(`?sort=${data}&p=${this.currentPage}`)
     },
     checklistPlusMinus(data) {
-      return this.cart.some(item => item.product_id === data.product_id)
+      return this.cart.some((item) => item.product_id === data.product_id)
     },
     showModal() {
       this.isUpdate = false
@@ -466,10 +464,8 @@ export default {
       }
       this.modalHeader = 'ADD ITEM PRODUCT'
     },
-
-    // PAGINATION
     pageChange(numbPage) {
-      this.$router.push(`?page=${numbPage}`)
+      // this.$router.push(`?page=${numbPage}`)
       this.setPage(numbPage)
       this.getProducts()
     }

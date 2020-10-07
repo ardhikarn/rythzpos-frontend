@@ -7,13 +7,6 @@
         </h1>
         <p class="text-secondary mb-0">Sign up and start shopping</p>
         <hr />
-        <b-alert
-          show
-          variant="danger"
-          v-show="isError"
-          class="my-2 text-center"
-          >{{ error() }}</b-alert
-        >
         <b-form @submit.prevent="addUser">
           <div class="input-field bg-light my-3 rounded-pill px-2">
             <i class="fas fa-user text-center"></i>
@@ -61,7 +54,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Register',
@@ -71,63 +64,33 @@ export default {
         user_name: '',
         user_email: '',
         user_password: ''
-      },
-      isError: false
+      }
     }
   },
   computed: {},
   methods: {
-    ...mapGetters({ error: 'getError' }),
     ...mapActions(['register']),
     addUser() {
       this.register(this.form)
-        .then(response => {
-          this.$bvModal
-            .msgBoxOk(
-              <b-alert show variant="success">
-                Account Created, Contact Admin for Activation Account
-              </b-alert>,
-              {
-                title: 'Confirmation',
-                okVariant: 'success',
-                headerClass: 'p-2 border-bottom-0',
-                footerClass: 'p-2 border-top-0',
-                centered: true
-              }
-            )
-            .then(response => {
-              this.$router.push('/login')
-            })
+        .then((response) => {
+          this.makeToast('info', 'Information', response.message)
+          setTimeout(() => {
+            this.$router.push('/login')
+          }, 4000)
         })
-        .catch(error => {
-          this.isError = true
-          console.log(error)
+        .catch((error) => {
+          this.makeToast('danger', 'Error', error.data.message)
         })
+    },
+    makeToast(variant, title, message) {
+      this.$bvToast.toast(message, {
+        title: title,
+        variant: variant,
+        solid: true
+      })
     }
   }
 }
 </script>
 
-<style scoped>
-.fa-facebook,
-.fa-google,
-.fa-apple {
-  font-size: 26px;
-}
-
-.input-field {
-  display: grid;
-  grid-template-columns: 15% 85%;
-}
-
-.input-field i {
-  line-height: 55px;
-  transition: 0.5s;
-}
-
-.input-field input {
-  background: none;
-  outline: none;
-  font-weight: 600;
-}
-</style>
+<style src="../../assets/css/style.css"></style>

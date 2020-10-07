@@ -17,9 +17,6 @@ export default {
       state.user = {}
       state.token = null
     },
-    setError(state, payload) {
-      state.errorLogin = payload
-    },
     setErrorRegis(state, payload) {
       state.errorRegis = payload.data.message
     }
@@ -46,7 +43,9 @@ export default {
           .then(response => {
             resolve(response.data)
           })
-          .catch(error => reject(error.response))
+          .catch(error => {
+            reject(error.response)
+          })
       })
     },
     logout(context) {
@@ -72,7 +71,6 @@ export default {
           return response
         },
         function(error) {
-          context.commit('setError', error.response.data.message)
           if (error.response.status === 403) {
             if (
               error.response.data.message === 'invalid token' ||
@@ -100,9 +98,6 @@ export default {
     },
     getUser(state) {
       return state.user
-    },
-    getError(state) {
-      return state.errorLogin
     },
     getErrorRegis(state) {
       return state.errorRegis

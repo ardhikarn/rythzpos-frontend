@@ -9,13 +9,6 @@
           Sign in to Your Account, before shopping
         </p>
         <hr />
-        <b-alert
-          show
-          variant="danger"
-          v-show="isError"
-          class="my-2 text-center"
-          >{{ error() }}</b-alert
-        >
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
           <div class="input-field bg-light my-2 rounded-pill px-2">
             <i class="fas fa-user text-center"></i>
@@ -66,21 +59,45 @@ export default {
       form: {
         user_email: '',
         user_password: ''
-      },
-      isError: false
+      }
     }
   },
+  computed: {
+    ...mapGetters({
+      user: 'getUser'
+    })
+  },
   methods: {
-    ...mapGetters({ error: 'getError' }),
     ...mapActions(['login']),
     onSubmit() {
       this.login(this.form)
-        .then(result => {
+        .then(response => {
           this.$router.push('/home')
+          setTimeout(() => {
+            if (this.user.user_role === 1) {
+              this.makeToast(
+                'success',
+                response.message,
+                `Welcome Admin ${this.user.user_name}`
+              )
+            } else {
+              this.makeToast(
+                'success',
+                response.message,
+                `Welcome Chasier ${this.user.user_name}`
+              )
+            }
+          }, 500)
         })
         .catch(error => {
-          this.isError = true
-          console.log(error)
+          if (
+            error.data.message ===
+            'Your account is not activate, contact admin for activation'
+          ) {
+            this.makeToast('info', 'Information', error.data.message)
+          } else {
+            this.makeToast('danger', 'Error', error.data.message)
+          }
         })
     },
     onReset() {
@@ -88,31 +105,16 @@ export default {
         user_email: '',
         user_password: ''
       }
+    },
+    makeToast(variant, title, message) {
+      this.$bvToast.toast(message, {
+        title: title,
+        variant: variant,
+        solid: true
+      })
     }
   }
 }
 </script>
 
-<style scoped>
-.fa-facebook,
-.fa-google,
-.fa-apple {
-  font-size: 26px;
-}
-
-.input-field {
-  display: grid;
-  grid-template-columns: 15% 85%;
-}
-
-.input-field i {
-  line-height: 55px;
-  transition: 0.5s;
-}
-
-.input-field input {
-  background: none;
-  outline: none;
-  font-weight: 600;
-}
-</style>
+<style src="../../assets/css/style.css"></style>

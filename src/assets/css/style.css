@@ -12,6 +12,23 @@ body {
   font-family: airbnb-light;
 }
 
+/* LOGIN AND REGISTER */
+.input-field {
+  display: grid;
+  grid-template-columns: 15% 85%;
+}
+
+.input-field i {
+  line-height: 55px;
+  transition: 0.5s;
+}
+
+.input-field input {
+  background: none;
+  outline: none;
+  font-weight: 600;
+}
+
 /* ========== header ========== */
 .fa-bars,
 .foodItems,
