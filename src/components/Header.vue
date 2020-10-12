@@ -2,9 +2,8 @@
   <b-row class="header">
     <b-col cols="1" class="align-self-center py-4">
       <router-link to="/home" class="text-white">
-        <b-button variant="secondary" class="mb-2 px-1">
-          <b-icon icon="arrow-left" aria-hidden="true"></b-icon>
-          Home
+        <b-button variant="secondary" class="px-1 btn-sm">
+          <b-icon icon="arrow-left" aria-hidden="true"></b-icon>Home
         </b-button>
       </router-link>
     </b-col>
