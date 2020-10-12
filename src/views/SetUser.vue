@@ -10,7 +10,7 @@
               <b-form-input
                 v-model="filter"
                 type="search"
-                placeholder="Search"
+                placeholder="Search User Email"
               ></b-form-input>
               <b-input-group-append>
                 <!-- <b-button :disabled="!filter" @click="filter = ''"
@@ -32,7 +32,9 @@
             :items="getDataUser"
             :fields="fields"
             :filter="filter"
-            :filter-included-fields="['user_name']"
+            :filter-included-fields="['user_email']"
+            :per-page="getLimitUser"
+            :current-page="currentPage"
             class="text-center"
           >
             <template #cell(actions)="item">
@@ -43,6 +45,7 @@
                 class="m-2 d-inline-block align-top img-edit"
                 alt="edit"
                 @click="editUser(item)"
+                v-b-modal.modal-user
               />
             </template>
           </b-table>
@@ -53,12 +56,49 @@
             v-model="currentPage"
             :total-rows="getTotalDataUser"
             :per-page="getLimitUser"
-            @change="pageChange"
-            v-show="!isSearch"
           ></b-pagination>
         </b-col>
       </b-row>
     </b-container>
+
+    <b-modal id="modal-user" title="Edit User" hide-footer>
+      <b-form>
+        <b-form-group label-cols-sm="3" label="Name" label-for="nested-name">
+          <b-form-input
+            id="nested-name"
+            v-model="form.user_name"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group label-cols-sm="3" label="Email" label-for="nested-email">
+          <b-form-input
+            id="nested-email"
+            v-model="form.user_email"
+            disabled
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group label-cols-sm="3" label="Role" label-for="nested-role">
+          <b-form-select
+            id="nested-role"
+            v-model="form.user_role"
+            :options="roleOpt"
+          ></b-form-select>
+        </b-form-group>
+        <b-form-group
+          label-cols-sm="3"
+          label="Status"
+          label-for="nested-status"
+        >
+          <b-form-select
+            id="nested-status"
+            v-model="form.user_status"
+            :options="statusOpt"
+          ></b-form-select>
+        </b-form-group>
+        <b-button type="button" variant="primary" @click="onUpdateUser()"
+          >Update</b-button
+        >
+      </b-form>
+    </b-modal>
   </b-container>
 </template>
 
@@ -84,23 +124,68 @@ export default {
         'Actions'
       ],
       filter: null,
-      currentPage: 1,
-      isSearch: false
+      isSearch: false,
+      form: {},
+      roleOpt: [
+        { value: 1, text: 'Admin' },
+        { value: 2, text: 'Cashier' }
+      ],
+      statusOpt: [
+        { value: 0, text: 'Not Active' },
+        { value: 1, text: 'Active' }
+      ],
+      currentPage: 1
     }
   },
   created() {
-    this.getAllUser()
+    this.getUsers()
   },
   computed: {
-    ...mapGetters(['getDataUser', 'getTotalDataUser', 'getLimitUser'])
+    ...mapGetters([
+      'getDataUser',
+      'getPageUser',
+      'getLimitUser',
+      'getTotalDataUser'
+    ])
   },
   methods: {
-    ...mapActions(['getAllUser']),
+    ...mapActions(['getUsers', 'patchUsers']),
     ...mapMutations(['setPageUser']),
     pageChange(numbPage) {
-      // this.$router.push(`?page=${numbPage}`)
       this.setPageUser(numbPage)
-      this.getProducts()
+      this.getUsers()
+      // this.$router.push(`?page=${numbPage}`)
+    },
+    editUser(data) {
+      this.form = {
+        user_email: data.item.user_email,
+        user_name: data.item.user_name,
+        user_role: data.item.user_role,
+        user_status: data.item.user_status
+      }
+      this.userId = data.item.user_id
+    },
+    onUpdateUser() {
+      const payload = {
+        id: this.userId,
+        form: this.form
+      }
+      this.patchUsers(payload)
+        .then((response) => {
+          this.makeToast('success', 'Success', response.message)
+          this.$bvModal.hide('modal-user')
+          this.getUsers()
+        })
+        .catch((error) => {
+          this.makeToast('danger', 'Error', error.data.message)
+        })
+    },
+    makeToast(variant, title, message) {
+      this.$bvToast.toast(message, {
+        title: 'Success',
+        variant: variant,
+        solid: true
+      })
     }
   }
 }
