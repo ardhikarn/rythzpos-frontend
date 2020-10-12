@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Rythz from '../views/Rythz.vue'
 import History from '../views/History.vue'
 import SetProduct from '../views/SetProduct.vue'
 import SetCategory from '../views/SetCategory.vue'
@@ -12,6 +13,12 @@ import store from '../store/index'
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/',
+    name: 'Rythz',
+    component: Rythz,
+    meta: { requiresVisitor: true }
+  },
   {
     path: '/home',
     name: 'Home',
@@ -69,7 +76,7 @@ router.beforeEach((to, from, next) => {
     // if not, redirect to login page.
     if (!store.getters.isLogin) {
       next({
-        path: '/login'
+        path: '/'
       })
     } else {
       next()
