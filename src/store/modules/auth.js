@@ -51,7 +51,7 @@ export default {
     logout(context) {
       localStorage.removeItem('token')
       context.commit('delUser')
-      router.push('/login')
+      router.push('/')
       sessionStorage.clear()
     },
     interceptorRequest(context) {
