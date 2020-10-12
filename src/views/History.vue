@@ -2,7 +2,7 @@
   <div class="about">
     <b-container fluid>
       <Header title="History" />
-      <b-row style="height:100%;" class="my-5">
+      <b-row style="height: 100%" class="my-5">
         <b-col xl="4" lg="4" md="4" sm="6" cols="12" class="mb-3">
           <b-card class="today-income py-4">
             <h5 class="mb-1">Today's Income</h5>
@@ -84,6 +84,7 @@
             </b-col>
             <div style="width: 100%">
               <b-table
+                responsive
                 striped
                 hover
                 :items="dataRecentOrder"
@@ -139,35 +140,35 @@ export default {
     getHistoryTodayIncome() {
       axios
         .get('http://127.0.0.1:3000/history/todayincome')
-        .then(response => {
+        .then((response) => {
           this.todayIncome = response.data.data[0].total_income
         })
-        .catch(error => console.log(error))
+        .catch((error) => console.log(error))
     },
     // ORDERS WEEK
     getCountHistoryWeek() {
       axios
         .get('http://127.0.0.1:3000/history/countWeek')
-        .then(response => {
+        .then((response) => {
           this.qtyOrdersWeek = response.data.data[0].orders
         })
-        .catch(error => console.log(error))
+        .catch((error) => console.log(error))
     },
     // YEARS INCOME
     getHistoryYearsIncome() {
       axios
         .get('http://127.0.0.1:3000/history/yearsIncome')
-        .then(response => {
+        .then((response) => {
           this.yearsIncome = response.data.data[0].yearsIncome
         })
-        .catch(error => console.log(error))
+        .catch((error) => console.log(error))
     },
 
     // CHART THIS MONTH
     getHistoryChartThisMonth() {
       axios
         .get('http://127.0.0.1:3000/history/chartThisMonth')
-        .then(response => {
+        .then((response) => {
           const addChart = response.data.data
           for (let i = 0; i < addChart.length; i++) {
             this.dataChart.push([addChart[i].date, addChart[i].total])
@@ -175,29 +176,29 @@ export default {
           this.month = 'This Month'
           this.$router.push('?chart=this-month')
         })
-        .catch(error => console.log(error))
+        .catch((error) => console.log(error))
     },
 
     // GET FOR TABLE RECENT ORDER
     getAllHistory() {
       axios
         .get('http://127.0.0.1:3000/history')
-        .then(response => {
+        .then((response) => {
           this.history = response.data.data
-          this.history.map(value => {
+          this.history.map((value) => {
             const addDataRecentOrder = {
               Invoices: `#${value.history_invoice}`,
               Cashier: this.cashier,
               Date: value.history_created_at.slice(0, 10),
               Orders: value.orders
-                .map(item => item.product_name.concat(` ${item.order_qty}x`))
+                .map((item) => item.product_name.concat(` ${item.order_qty}x`))
                 .join(', '),
               Amount: `Rp. ${value.history_subtotal}`
             }
             this.dataRecentOrder = [...this.dataRecentOrder, addDataRecentOrder]
           })
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
     },
@@ -205,15 +206,15 @@ export default {
       this.dataRecentOrder = []
       axios
         .get('http://127.0.0.1:3000/history/today')
-        .then(response => {
+        .then((response) => {
           this.history = response.data.data
-          this.history.map(value => {
+          this.history.map((value) => {
             const addDataRecentOrder = {
               Invoices: `#${value.history_invoice}`,
               Cashier: this.cashier,
               Date: value.history_created_at.slice(0, 10),
               Orders: value.orders
-                .map(item => item.product_name.concat(` ${item.order_qty}x`))
+                .map((item) => item.product_name.concat(` ${item.order_qty}x`))
                 .join(', '),
               Amount: `Rp. ${value.history_subtotal}`
             }
@@ -221,7 +222,7 @@ export default {
           })
           this.periodOfTime = 'Today'
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
     },
@@ -229,15 +230,15 @@ export default {
       this.dataRecentOrder = []
       axios
         .get('http://127.0.0.1:3000/history/week')
-        .then(response => {
+        .then((response) => {
           this.history = response.data.data
-          this.history.map(value => {
+          this.history.map((value) => {
             const addDataRecentOrder = {
               Invoices: `#${value.history_invoice}`,
               Cashier: this.cashier,
               Date: value.history_created_at.slice(0, 10),
               Orders: value.orders
-                .map(item => item.product_name.concat(` ${item.order_qty}x`))
+                .map((item) => item.product_name.concat(` ${item.order_qty}x`))
                 .join(', '),
               Amount: `Rp. ${value.history_subtotal}`
             }
@@ -245,7 +246,7 @@ export default {
           })
           this.periodOfTime = 'This Week'
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
     },
@@ -253,15 +254,15 @@ export default {
       this.dataRecentOrder = []
       axios
         .get('http://127.0.0.1:3000/history/month')
-        .then(response => {
+        .then((response) => {
           this.history = response.data.data
-          this.history.map(value => {
+          this.history.map((value) => {
             const addDataRecentOrder = {
               Invoices: `#${value.history_invoice}`,
               Cashier: this.cashier,
               Date: value.history_created_at.slice(0, 10),
               Orders: value.orders
-                .map(item => item.product_name.concat(` ${item.order_qty}x`))
+                .map((item) => item.product_name.concat(` ${item.order_qty}x`))
                 .join(', '),
               Amount: `Rp. ${value.history_subtotal}`
             }
@@ -269,7 +270,7 @@ export default {
           })
           this.periodOfTime = 'This Month'
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
     }
