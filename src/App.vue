@@ -19,21 +19,4 @@ export default {
 }
 </script>
 
-<style>
-@font-face {
-  font-family: airbnb-light;
-  src: url('./assets/airbnb/Light.ttf');
-}
-
-@font-face {
-  font-family: airbnb-bold;
-  src: url('./assets/airbnb/Bold.ttf');
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  font-family: airbnb-light;
-}
-</style>
+<style src="./assets/css/style.css"></style>
