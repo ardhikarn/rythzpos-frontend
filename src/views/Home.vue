@@ -167,24 +167,6 @@
                             </p>
                           </span>
                         </b-col>
-                        <b-col cols="3" align="center">
-                          <span>
-                            <i
-                              class="fas fa-edit icon-product"
-                              v-if="user.user_role === 1"
-                              @click="editProduct(item)"
-                            ></i>
-                          </span>
-                        </b-col>
-                        <b-col cols="3" align="center">
-                          <span>
-                            <i
-                              class="fas fa-trash-alt icon-product"
-                              @click.prevent="deleteProduct(item)"
-                              v-if="user.user_role === 1"
-                            ></i>
-                          </span>
-                        </b-col>
                       </b-row>
                     </template>
                   </b-card>
@@ -211,80 +193,6 @@
         <CartList />
       </b-row>
     </b-container>
-
-    <!-- MODAL ADD -->
-    <b-modal hide-footer ref="modal-product" :title="modalHeader">
-      <b-form @submit.prevent="addProduct">
-        <b-row class="mb-3">
-          <b-col cols="4" class="align-self-center">Category Id :</b-col>
-          <b-col cols="8">
-            <b-form-select
-              required
-              v-model="form.category_id"
-              id="inline-form-custom-select-pref"
-              :options="[{ text: 'Choose...', value: null }, 1, 2, 3, 4]"
-              :value="null"
-            ></b-form-select>
-          </b-col>
-        </b-row>
-        <b-row class="mb-3">
-          <b-col cols="4" class="align-self-center">Product Name :</b-col>
-          <b-col cols="8">
-            <b-form-input
-              required
-              v-model="form.product_name"
-              id="input-default"
-              placeholder="Enter product name"
-            ></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row class="mb-3">
-          <b-col cols="4" class="align-self-center">Product Image :</b-col>
-          <b-col cols="8">
-            <input type="file" @change="handleFile" />
-          </b-col>
-        </b-row>
-        <b-row class="mb-3">
-          <b-col cols="4" class="align-self-center">Product Price :</b-col>
-          <b-col cols="8">
-            <b-form-input
-              required
-              v-model="form.product_price"
-              id="input-default"
-              placeholder="Enter product price"
-            ></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row class="mb-3">
-          <b-col cols="4" class="align-self-center">Product Status :</b-col>
-          <b-col cols="8">
-            <b-form-select
-              required
-              v-model="form.product_status"
-              id="inline-form-custom-select-pref"
-              :options="[{ text: 'Choose...', value: null }, 0, 1]"
-              :value="null"
-            ></b-form-select>
-          </b-col>
-        </b-row>
-        <div>
-          <b-button
-            type="submit"
-            class="text-white mt-3 py-2 my-2"
-            v-show="!isUpdate"
-            >Add</b-button
-          >
-          <b-button
-            type="button"
-            class="text-white mt-3 py-2 my-2"
-            v-show="isUpdate"
-            @click.prevent="patchProduct()"
-            >Update</b-button
-          >
-          <b-button class="text-white py-2 my-2">Cancel</b-button>
-        </div>
-      </b-form>
-    </b-modal>
   </div>
 </template>
 
@@ -322,10 +230,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      page: 'getPage2',
+      page: 'getPage',
       perLimit: 'getLimit',
       sort: 'getSort',
-      products: 'getProduct2',
+      products: 'getProduct',
       totalData: 'getTotalData',
       productId: 'getProudctId',
       user: 'getUser',
@@ -337,76 +245,12 @@ export default {
     this.getProducts()
   },
   methods: {
-    ...mapActions([
-      'getProducts',
-      'postProducts',
-      'patchProducts',
-      'deleteProducts',
-      'searchProducts'
-    ]),
+    ...mapActions(['getProducts', 'searchProducts']),
     ...mapActions({ handleLogout: 'logout' }),
     handleFile(event) {
       this.form.product_image = event.target.files[0]
     },
-    ...mapMutations([
-      'setPage',
-      'addToCart',
-      'removeCart',
-      'sortProduct',
-      'setLimit'
-    ]),
-    addProduct() {
-      const data = new FormData()
-      data.append('category_id', this.form.category_id)
-      data.append('product_name', this.form.product_name)
-      data.append('product_image', this.form.product_image)
-      data.append('product_price', this.form.product_price)
-      data.append('product_status', this.form.product_status)
-      this.postProducts(data)
-        .then((response) => {
-          this.$refs['modal-product'].hide()
-          this.getProducts()
-        })
-        .catch((error) => console.log(error))
-    },
-    editProduct(data) {
-      this.$refs['modal-product'].show()
-      this.form = {
-        category_id: data.category_id,
-        product_name: data.product_name,
-        product_image: data.product_image,
-        product_price: data.product_price,
-        product_status: data.product_status
-      }
-      this.product_id = data.product_id
-      this.modalHeader = 'EDIT ITEM PRODUCT'
-      this.isUpdate = true
-      // this.getProduct()
-    },
-    patchProduct() {
-      const data = new FormData()
-      data.append('category_id', this.form.category_id)
-      data.append('product_name', this.form.product_name)
-      data.append('product_image', this.form.product_image)
-      data.append('product_price', this.form.product_price)
-      data.append('product_status', this.form.product_status)
-      const setData = {
-        product_id: this.product_id,
-        form: data
-      }
-      this.patchProducts(setData)
-        .then((response) => {
-          this.$refs['modal-product'].hide()
-          this.getProducts()
-          this.isUpdate = false
-        })
-        .catch((error) => console.log(error))
-    },
-    deleteProduct(data) {
-      this.product_id = data.product_id
-      this.deleteProducts(this.product_id)
-      this.getProducts()
-    },
+    ...mapMutations(['setPage', 'addToCart', 'removeCart', 'sortProduct']),
     logout() {
       this.$bvModal
         .msgBoxConfirm('logout account?', {
@@ -449,18 +293,6 @@ export default {
     },
     checklistPlusMinus(data) {
       return this.cart.some((item) => item.product_id === data.product_id)
-    },
-    showModal() {
-      this.isUpdate = false
-      this.$refs['modal-product'].show()
-      this.form = {
-        category_id: '',
-        product_name: '',
-        product_image: '',
-        product_price: '',
-        product_status: ''
-      }
-      this.modalHeader = 'ADD ITEM PRODUCT'
     },
     pageChange(numbPage) {
       // this.$router.push(`?page=${numbPage}`)

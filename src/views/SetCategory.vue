@@ -38,6 +38,7 @@
             :filter="filter"
             :filter-included-fields="['category_name']"
             class="text-center"
+            v-if="getCategory.category_id === '1' ? 'Active' : 'Not Active'"
           >
             <template #cell(actions)="item">
               <b-icon
@@ -159,12 +160,12 @@ export default {
     },
     onSubmit() {
       this.postCategory(this.formCategory)
-        .then(response => {
+        .then((response) => {
           this.getCategory()
           this.makeToast('success', 'Success', response.message)
           this.$refs['modal-category'].hide()
         })
-        .catch(error => {
+        .catch((error) => {
           this.makeToast('danger', 'Error', error.data.message)
         })
     },
@@ -184,12 +185,12 @@ export default {
         formCategory: this.formCategory
       }
       this.patchCategory(updateData)
-        .then(response => {
+        .then((response) => {
           this.getCategory()
           this.makeToast('success', 'Success', response.message)
           this.$refs['modal-category'].hide()
         })
-        .catch(error => this.makeToast('danger', 'Error', error.data.message))
+        .catch((error) => this.makeToast('danger', 'Error', error.data.message))
     },
     confirmDelete(data) {
       this.$bvModal
@@ -204,14 +205,14 @@ export default {
             centered: true
           }
         )
-        .then(response => {
+        .then((response) => {
           if (response) {
             this.deleteCategory(data.item.category_id)
-              .then(res => {
+              .then((res) => {
                 this.getCategory()
                 this.makeToast('success', 'Success', res.message)
               })
-              .catch(error => {
+              .catch((error) => {
                 this.makeToast('success', 'Success', error.data.message)
               })
           }

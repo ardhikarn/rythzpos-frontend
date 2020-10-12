@@ -4,7 +4,7 @@ export default {
   state: {
     products: [],
     page: 1,
-    limit: 6,
+    limit: 5,
     search: '',
     sort: 'product_id',
     totalData: null,
@@ -29,6 +29,7 @@ export default {
       state.page = payload
     },
     addToCart(state, payload) {
+      console.log(payload)
       const addItemToCart = {
         product_id: payload.product_id,
         product_name: payload.product_name,
@@ -117,10 +118,10 @@ export default {
         axios
           .delete(`http://127.0.0.1:3000/product/${payload}`)
           .then(response => {
-            resolve(response)
+            resolve(response.data)
           })
           .catch(error => {
-            reject(error)
+            reject(error.response)
           })
       })
     },
@@ -139,13 +140,13 @@ export default {
     getLimit(state) {
       return state.limit
     },
-    getPage2(state) {
+    getPage(state) {
       return state.page
     },
     getTotalData(state) {
       return state.totalData
     },
-    getProduct2(state) {
+    getProduct(state) {
       return state.products
     },
     getProductId(state) {
