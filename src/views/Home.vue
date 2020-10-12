@@ -2,15 +2,69 @@
   <div class="home">
     <b-container fluid>
       <b-row align="center" class="header">
-        <b-col cols="1" class="align-self-center py-4 px-2">
-          <div v-b-toggle.my-sidebar>
+        <b-col
+          cols="1"
+          class="align-self-center py-4 px-2"
+          style="cursor: pointer"
+        >
+          <div id="popover-account">
             <b-avatar variant="secondary"> </b-avatar>
             <small v-if="user.user_role === 1"> Admin</small>
             <small v-else> Cashier</small>
           </div>
+
+          <!-- POPOVER -->
+          <b-popover
+            target="popover-account"
+            triggers="hover focus click"
+            placement="bottomright"
+          >
+            <router-link to="/history">
+              <b-row class="my-2 py-2">
+                <b-col cols="3" class="text-center"
+                  ><b-icon icon="clipboard-data" aria-hidden="true"></b-icon
+                ></b-col>
+                <b-col cols="9" class="pl-0">History Order</b-col>
+              </b-row>
+            </router-link>
+            <div v-if="user.user_role === 1">
+              <router-link to="/setuser">
+                <b-row class="my-2 py-2">
+                  <b-col cols="3" class="text-center"
+                    ><b-icon icon="people" aria-hidden="true"></b-icon
+                  ></b-col>
+                  <b-col cols="9" class="pl-0"> Setting User </b-col>
+                </b-row>
+              </router-link>
+              <router-link to="/setproduct">
+                <b-row class="my-2 py-2">
+                  <b-col cols="3" class="text-center"
+                    ><b-icon icon="gear" aria-hidden="true"></b-icon
+                  ></b-col>
+                  <b-col cols="9" class="pl-0"> Setting Products </b-col>
+                </b-row>
+              </router-link>
+              <router-link to="/setcategory">
+                <b-row class="my-2 py-2">
+                  <b-col cols="3" class="text-center"
+                    ><b-icon icon="diagram3" aria-hidden="true"></b-icon
+                  ></b-col>
+                  <b-col cols="9" class="pl-0"> Setting Category </b-col>
+                </b-row>
+              </router-link>
+            </div>
+            <b-link>
+              <b-row class="my-2 py-2" @click="logout">
+                <b-col cols="3" class="text-center"
+                  ><b-icon icon="power" aria-hidden="true"></b-icon
+                ></b-col>
+                <b-col cols="9" class="pl-0"> Logout </b-col>
+              </b-row>
+            </b-link>
+          </b-popover>
         </b-col>
         <b-col cols="7" class="foodItems align-self-center py-4"
-          >Caffeshop</b-col
+          >Rythz-POS</b-col
         >
         <CountCart />
       </b-row>
@@ -73,6 +127,7 @@
                 >
                   <b-card>
                     <b-card
+                      @click="addToCart(item)"
                       :img-src="'http://127.0.0.1:3000/' + item.product_image"
                       img-alt="Image"
                       no-body
@@ -230,63 +285,6 @@
         </div>
       </b-form>
     </b-modal>
-
-    <!-- SIDEBAR MENU -->
-    <b-sidebar id="my-sidebar" shadow style="width: 400px">
-      <b-container fluid>
-        <b-row class="text-center px-0 py-2">
-          <!-- <b-col cols="12" class="mt-5">
-            <router-link to="/home" class="text-white">
-              <b-button variant="secondary" class="mb-2" style="width: 125px">
-                <b-icon icon="shop" aria-hidden="true"></b-icon>
-                Home
-              </b-button>
-            </router-link>
-          </b-col> -->
-          <b-col cols="12" class="my-2">
-            <router-link to="/history" class="text-white">
-              <b-button variant="secondary" class="mb-2" style="width: 125px">
-                <b-icon icon="clipboard-data" aria-hidden="true"></b-icon>
-                History
-              </b-button>
-            </router-link>
-          </b-col>
-          <b-col cols="12" class="mb-5" v-if="user.user_role === 1">
-            <b-dropdown variant="secondary">
-              <template v-slot:button-content>
-                <b-icon icon="gear-fill"></b-icon> Settings
-              </template>
-              <b-dropdown-group header="Choose options" class="small">
-                <b-dropdown-divider></b-dropdown-divider>
-                <router-link to="/setproduct">
-                  <b-dropdown-item-button>
-                    <strong>Products</strong>
-                  </b-dropdown-item-button>
-                </router-link>
-                <b-dropdown-divider></b-dropdown-divider>
-                <router-link to="/setcategory">
-                  <b-dropdown-item-button>
-                    <strong>Categories</strong>
-                  </b-dropdown-item-button>
-                </router-link>
-                <b-dropdown-divider></b-dropdown-divider>
-                <router-link to="/setuser">
-                  <b-dropdown-item-button>
-                    <strong>Users</strong>
-                  </b-dropdown-item-button>
-                </router-link>
-              </b-dropdown-group>
-            </b-dropdown>
-          </b-col>
-          <b-col cols="12" class="my-5">
-            <b-button variant="danger" class="mb-2 text-center" @click="logout">
-              <b-icon icon="power" aria-hidden="true"></b-icon>
-              Logout
-            </b-button>
-          </b-col>
-        </b-row>
-      </b-container>
-    </b-sidebar>
   </div>
 </template>
 
@@ -406,8 +404,8 @@ export default {
     },
     deleteProduct(data) {
       this.product_id = data.product_id
-      this.getProducts()
       this.deleteProducts(this.product_id)
+      this.getProducts()
     },
     logout() {
       this.$bvModal
