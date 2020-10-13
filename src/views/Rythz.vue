@@ -187,7 +187,7 @@ export default {
               this.makeToast(
                 'success',
                 response.message,
-                `Welcome Chasier ${this.user.user_name}`
+                `Welcome Cashier ${this.user.user_name}`
               )
             }
           }, 500)
