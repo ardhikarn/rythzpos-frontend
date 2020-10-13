@@ -44,12 +44,13 @@
                 size="sm"
                 id="dropdown-dropleft"
                 dropleft
-                :text="month"
+                :text="periodeOfChart"
                 class="m-2"
               >
-                <b-dropdown-item @click="getHistoryChartThisMonth()"
-                  >This Month</b-dropdown-item
-                >
+                <b-dropdown-item @click="chartToday">Today</b-dropdown-item>
+                <b-dropdown-item @click="chartThisMonth">
+                  This Month
+                </b-dropdown-item>
               </b-dropdown>
             </b-col>
             <b-col xl="12">
@@ -68,18 +69,18 @@
             </b-col>
             <b-col xl="6" class="text-right my-1">
               <b-dropdown dropleft :text="periodOfTime">
-                <b-dropdown-item @click="getAllHistory()"
-                  >All Time</b-dropdown-item
-                >
-                <b-dropdown-item @click="getHistoryToday()"
-                  >Today</b-dropdown-item
-                >
-                <b-dropdown-item @click="getHistoryWeek()"
-                  >This Week</b-dropdown-item
-                >
-                <b-dropdown-item @click="getHistoryMonth()"
-                  >This Month</b-dropdown-item
-                >
+                <b-dropdown-item @click="getAllDataHistory">
+                  All Time
+                </b-dropdown-item>
+                <b-dropdown-item @click="getDataTables('today')">
+                  Today
+                </b-dropdown-item>
+                <b-dropdown-item @click="getDataTables('week')">
+                  This Week
+                </b-dropdown-item>
+                <b-dropdown-item @click="getDataTables('month')">
+                  This Month
+                </b-dropdown-item>
               </b-dropdown>
             </b-col>
             <div style="width: 100%">
@@ -87,7 +88,7 @@
                 responsive
                 striped
                 hover
-                :items="dataRecentOrder"
+                :items="AllHistory"
                 :per-page="limit"
                 :current-page="currentPage"
                 style="text-align: center"
@@ -102,7 +103,7 @@
 
 <script>
 import Header from '@/components/Header'
-import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'History',
@@ -111,168 +112,51 @@ export default {
   },
   data() {
     return {
-      // CARD INCOME, ORDERS
-      todayIncome: 0,
-      qtyOrdersWeek: 0,
-      yearsIncome: 0,
-
       // CHART
-      month: 'month',
-      dataChart: [],
+      periodeOfChart: 'Today',
 
       // TABEL HISTORY RECENT ORDER
       history: [],
       cashier: 'Cashier 1',
-      dataRecentOrder: [],
-      limit: 10,
+      // dataRecentOrder: [],
+      limit: 5,
       currentPage: 1,
-      periodOfTime: 'Period of Time'
+      period: ''
     }
   },
   created() {
-    this.getAllHistory()
+    this.getAllDataHistory()
     this.getHistoryTodayIncome()
     this.getCountHistoryWeek()
     this.getHistoryYearsIncome()
   },
+  computed: {
+    ...mapGetters({
+      todayIncome: 'getTodayIncome',
+      qtyOrdersWeek: 'getQtyOrdersWeek',
+      yearsIncome: 'getYearsIncome',
+      dataChart: 'getDataChart',
+      AllHistory: 'getAllHistory',
+      periodOfTime: 'getPeriodOfTime'
+    })
+  },
   methods: {
-    // TODAY INCOME
-    getHistoryTodayIncome() {
-      axios
-        .get('http://127.0.0.1:3000/history/todayincome')
-        .then((response) => {
-          this.todayIncome = response.data.data[0].total_income
-        })
-        .catch((error) => console.log(error))
+    ...mapActions([
+      'getHistoryTodayIncome',
+      'getCountHistoryWeek',
+      'getHistoryYearsIncome',
+      'getHistoryChartThisMonth',
+      'getAllDataHistory',
+      'getDataTables'
+    ]),
+    chartThisMonth() {
+      this.getHistoryChartThisMonth()
+      this.periodeOfChart = 'This Month'
+      this.$router.push('?chart=this-month')
     },
-    // ORDERS WEEK
-    getCountHistoryWeek() {
-      axios
-        .get('http://127.0.0.1:3000/history/countWeek')
-        .then((response) => {
-          this.qtyOrdersWeek = response.data.data[0].orders
-        })
-        .catch((error) => console.log(error))
-    },
-    // YEARS INCOME
-    getHistoryYearsIncome() {
-      axios
-        .get('http://127.0.0.1:3000/history/yearsIncome')
-        .then((response) => {
-          this.yearsIncome = response.data.data[0].yearsIncome
-        })
-        .catch((error) => console.log(error))
-    },
-
-    // CHART THIS MONTH
-    getHistoryChartThisMonth() {
-      axios
-        .get('http://127.0.0.1:3000/history/chartThisMonth')
-        .then((response) => {
-          const addChart = response.data.data
-          for (let i = 0; i < addChart.length; i++) {
-            this.dataChart.push([addChart[i].date, addChart[i].total])
-          }
-          this.month = 'This Month'
-          this.$router.push('?chart=this-month')
-        })
-        .catch((error) => console.log(error))
-    },
-
-    // GET FOR TABLE RECENT ORDER
-    getAllHistory() {
-      axios
-        .get('http://127.0.0.1:3000/history')
-        .then((response) => {
-          this.history = response.data.data
-          this.history.map((value) => {
-            const addDataRecentOrder = {
-              Invoices: `#${value.history_invoice}`,
-              Cashier: this.cashier,
-              Date: value.history_created_at.slice(0, 10),
-              Orders: value.orders
-                .map((item) => item.product_name.concat(` ${item.order_qty}x`))
-                .join(', '),
-              Amount: `Rp. ${value.history_subtotal}`
-            }
-            this.dataRecentOrder = [...this.dataRecentOrder, addDataRecentOrder]
-          })
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    getHistoryToday() {
-      this.dataRecentOrder = []
-      axios
-        .get('http://127.0.0.1:3000/history/today')
-        .then((response) => {
-          this.history = response.data.data
-          this.history.map((value) => {
-            const addDataRecentOrder = {
-              Invoices: `#${value.history_invoice}`,
-              Cashier: this.cashier,
-              Date: value.history_created_at.slice(0, 10),
-              Orders: value.orders
-                .map((item) => item.product_name.concat(` ${item.order_qty}x`))
-                .join(', '),
-              Amount: `Rp. ${value.history_subtotal}`
-            }
-            this.dataRecentOrder = [...this.dataRecentOrder, addDataRecentOrder]
-          })
-          this.periodOfTime = 'Today'
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    getHistoryWeek() {
-      this.dataRecentOrder = []
-      axios
-        .get('http://127.0.0.1:3000/history/week')
-        .then((response) => {
-          this.history = response.data.data
-          this.history.map((value) => {
-            const addDataRecentOrder = {
-              Invoices: `#${value.history_invoice}`,
-              Cashier: this.cashier,
-              Date: value.history_created_at.slice(0, 10),
-              Orders: value.orders
-                .map((item) => item.product_name.concat(` ${item.order_qty}x`))
-                .join(', '),
-              Amount: `Rp. ${value.history_subtotal}`
-            }
-            this.dataRecentOrder = [...this.dataRecentOrder, addDataRecentOrder]
-          })
-          this.periodOfTime = 'This Week'
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    getHistoryMonth() {
-      this.dataRecentOrder = []
-      axios
-        .get('http://127.0.0.1:3000/history/month')
-        .then((response) => {
-          this.history = response.data.data
-          this.history.map((value) => {
-            const addDataRecentOrder = {
-              Invoices: `#${value.history_invoice}`,
-              Cashier: this.cashier,
-              Date: value.history_created_at.slice(0, 10),
-              Orders: value.orders
-                .map((item) => item.product_name.concat(` ${item.order_qty}x`))
-                .join(', '),
-              Amount: `Rp. ${value.history_subtotal}`
-            }
-            this.dataRecentOrder = [...this.dataRecentOrder, addDataRecentOrder]
-          })
-          this.periodOfTime = 'This Month'
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+    chartToday() {
+      this.periodeOfChart = 'Today'
+      this.$router.push('')
     }
   }
 }
