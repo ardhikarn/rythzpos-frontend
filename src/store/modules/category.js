@@ -20,7 +20,7 @@ export default {
     getCategory(context) {
       return new Promise((resolve, reject) => {
         axios
-          .get('http://127.0.0.1:3000/category')
+          .get(`${process.env.VUE_APP_URL}category`)
           .then(response => {
             context.commit('setCategory', response.data.data)
             resolve(response.data)
@@ -31,7 +31,7 @@ export default {
     postCategory(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:3000/category', payload)
+          .post(`${process.env.VUE_APP_URL}category`, payload)
           .then(response => {
             context.commit('clearHistory')
             resolve(response.data)
@@ -43,7 +43,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .patch(
-            `http://127.0.0.1:3000/category/${payload.category_id}`,
+            `${process.env.VUE_APP_URL}category/${payload.category_id}`,
             payload.formCategory
           )
           .then(response => {
@@ -56,7 +56,7 @@ export default {
     deleteCategory(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .delete(`http://127.0.0.1:3000/category/${payload}`)
+          .delete(`${process.env.VUE_APP_URL}category/${payload}`)
           .then(response => {
             context.commit('clearHistory')
             resolve(response.data)

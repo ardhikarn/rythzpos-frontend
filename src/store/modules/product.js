@@ -68,7 +68,7 @@ export default {
     getProducts(context, payload) {
       axios
         .get(
-          `http://127.0.0.1:3000/product?page=${context.state.page}&limit=${context.state.limit}&sort=${context.state.sort}`
+          `${process.env.VUE_APP_URL}product?page=${context.state.page}&limit=${context.state.limit}&sort=${context.state.sort}`
         )
         .then(response => {
           context.commit('setProduct', response.data)
@@ -77,7 +77,7 @@ export default {
     },
     searchProducts(context, payload) {
       axios
-        .get(`http://127.0.0.1:3000/product/search?search=${payload}`)
+        .get(`${process.env.VUE_APP_URL}product/search?search=${payload}`)
         .then(response => {
           context.commit('setSearchResult', response.data.data.searchResult)
           context.commit('sortProduct', 'product_id')
@@ -89,7 +89,7 @@ export default {
     postProducts(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:3000/product', payload)
+          .post(`${process.env.VUE_APP_URL}product`, payload)
           .then(response => {
             resolve(response.data)
           })
@@ -102,7 +102,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .patch(
-            `http://127.0.0.1:3000/product/${payload.product_id}`,
+            `${process.env.VUE_APP_URL}product/${payload.product_id}`,
             payload.form
           )
           .then(response => {
@@ -116,7 +116,7 @@ export default {
     deleteProducts(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .delete(`http://127.0.0.1:3000/product/${payload}`)
+          .delete(`${process.env.VUE_APP_URL}product/${payload}`)
           .then(response => {
             resolve(response.data)
           })
@@ -127,7 +127,7 @@ export default {
     },
     postOrders(context, payload) {
       axios
-        .post('http://127.0.0.1:3000/order', payload)
+        .post(`${process.env.VUE_APP_URL}order`, payload)
         .then(response => {
           // console.log(response.data)
           context.commit('setInvoice', response.data.data.invoice)
