@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Rythz',
@@ -159,6 +159,7 @@ export default {
   },
   methods: {
     ...mapActions(['login', 'register']),
+    ...mapMutations(['cancelOrder']),
     addUser() {
       this.register(this.formRegis)
         .then((response) => {
@@ -176,6 +177,7 @@ export default {
       this.login(this.formLogin)
         .then((response) => {
           this.$router.push('/home')
+          this.cancelOrder()
           setTimeout(() => {
             if (this.user.user_role === 1) {
               this.makeToast(
