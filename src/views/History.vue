@@ -69,9 +69,7 @@
             </b-col>
             <b-col xl="6" class="text-right my-1">
               <b-dropdown dropleft :text="periodOfTime">
-                <b-dropdown-item @click="getAllDataHistory">
-                  All Time
-                </b-dropdown-item>
+                <b-dropdown-item @click="allTime"> All Time </b-dropdown-item>
                 <b-dropdown-item @click="getDataTables('today')">
                   Today
                 </b-dropdown-item>
@@ -103,7 +101,7 @@
 
 <script>
 import Header from '@/components/Header'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'History',
@@ -149,6 +147,7 @@ export default {
       'getAllDataHistory',
       'getDataTables'
     ]),
+    ...mapMutations(['setClearDataHistory']),
     chartThisMonth() {
       this.getHistoryChartThisMonth()
       this.periodeOfChart = 'This Month'
@@ -157,6 +156,10 @@ export default {
     chartToday() {
       this.periodeOfChart = 'Today'
       this.$router.push('')
+    },
+    allTime() {
+      this.setClearDataHistory([])
+      this.getAllDataHistory()
     }
   }
 }

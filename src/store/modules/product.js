@@ -29,7 +29,6 @@ export default {
       state.page = payload
     },
     addToCart(state, payload) {
-      console.log(payload)
       const addItemToCart = {
         product_id: payload.product_id,
         product_name: payload.product_name,

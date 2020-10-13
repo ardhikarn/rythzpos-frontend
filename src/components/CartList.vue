@@ -104,7 +104,7 @@
             </b-row>
             <div class="button-checkout">
               <b-button
-                @click="closeModalCheckout(), cancelOrder()"
+                @click="closeModalCheckout()"
                 class="text-white mt-3 py-2 my-2"
                 >Print Checkout</b-button
               >
@@ -176,7 +176,7 @@ export default {
     closeModalCheckout() {
       this.$refs['modal-checkout'].hide()
       this.$refs['modal-confirm'].hide()
-      this.cart = []
+      this.cancelOrder()
     }
   }
 }

@@ -111,7 +111,6 @@ export default {
       })
     },
     getAllDataHistory(context, payload) {
-      context.commit('setClearDataHistory')
       return new Promise((resolve, reject) => {
         axios
           .get(`${process.env.VUE_APP_URL}history`)
