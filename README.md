@@ -1,6 +1,17 @@
-<h1 align="center">VUE JS - #CAFFESHOP - Caffe and Coffe</h1>
+<h1 align='center'>Vue JS - Rythz POS (Point Of Sale)</h1>
+  <p align="center">
+    <a href="https://rythz-pos.netlify.app/">View Demo</a>
+    ·
+    <a href="https://github.com/ardhikarn/vue_caffe-shop/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/ardhikarn/vue_caffe_shop/issues">Request Feature</a>
+  </p>
 
-This project is a my front end project, the name is Caffeshop App. More about Vue. [More about Vue](https://en.wikipedia.org/wiki/Vue.js)
+![Image Banner](https://raw.githubusercontent.com/ardhikarn/vue_caffe-shop/master/image-banner.jpg)
+
+## About The Project
+
+This project is a my front end project, the name is Rythz-POS App. More about Vue. [More about Vue](https://en.wikipedia.org/wiki/Vue.js)
 
 ## Built With
 
@@ -10,21 +21,30 @@ This project is a my front end project, the name is Caffeshop App. More about Vu
 ## Requirements
 
 1. <a href="https://nodejs.org/en/download/">Node Js</a>
-2. Node_modules
-3. Backend API Cazzy RESTfull API [here](https://github.com/ardhikarn/API_caffeshop)
+2. Node_modules `npm install` or `yarn install`
+3. Nepays Backend API [`here`](https://github.com/ardhikarn/API_caffeshop)
 
-## How to install ?
+## Getting Started
 
-1. Download this Project
+1. Download this Project or you can type `git clone https://github.com/ardhikarn/vue_caffe-shop.git`
 2. Open app's directory in CMD or Terminal
 3. Type `npm install` or `yarn install`
-4. Type npm start
+4. Add .env file at root folder project
 
-### Compiles and hot-reloads for development
+```sh
+VUE_APP_URL = https://backend-rythzpos.fwdev.online/
+```
 
-```
-npm run serve
-```
+5. Type `npm run serve`
+
+## Acknowledgements
+
+- [Axios](https://www.npmjs.com/package/axios)
+- [Vuex](https://vuex.vuejs.org/)
+- [bootstrap-vue]
+- [chart.js]
+- [jspdf]
+- [vue-chartkick]
 
 ### Compiles and minifies for production
 
