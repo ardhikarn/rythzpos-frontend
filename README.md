@@ -1,6 +1,6 @@
 <h1 align='center'>Vue JS - Rythz POS (Point Of Sale)</h1>
   <p align="center">
-    <a href="https://rythz-pos.netlify.app/">View Demo</a>
+    <a href="https://rythzpos.netlify.app/">View Demo</a>
     ·
     <a href="https://github.com/ardhikarn/vue_caffe-shop/issues">Report Bug</a>
     ·
@@ -22,7 +22,7 @@ This project is a my front end project, the name is Rythz-POS App. More about Vu
 
 1. <a href="https://nodejs.org/en/download/">Node Js</a>
 2. Node_modules `npm install` or `yarn install`
-3. Nepays Backend API [`here`](https://github.com/ardhikarn/API_caffeshop)
+3. Rythzpos Backend API [`here`](https://github.com/ardhikarn/API_caffeshop)
 
 ## Getting Started
 
