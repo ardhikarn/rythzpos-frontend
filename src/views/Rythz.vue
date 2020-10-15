@@ -12,9 +12,7 @@
             <b-modal id="modal-login" hide-footer hide-header centered>
               <b-row class="align-items-center justify-content-center">
                 <b-col xl="10" cols="10">
-                  <h1>
-                    <strong>Sign In</strong>
-                  </h1>
+                  <h1 v-format.bold>Sign In</h1>
                   <p class="text-secondary mb-0">
                     Sign in to Your Account, before shopping
                   </p>
@@ -68,9 +66,7 @@
             <b-modal id="modal-register" hide-header hide-footer centered>
               <b-row class="align-items-center justify-content-center">
                 <b-col xl="10" cols="10">
-                  <h1>
-                    <strong>Sign Up</strong>
-                  </h1>
+                  <h1 v-format.bold>Sign Up</h1>
                   <p class="text-secondary mb-0">Sign up and start shopping</p>
                   <hr />
                   <b-form @submit.prevent="addUser">
@@ -126,7 +122,7 @@
     <div class="banner">
       <b-container class="text-centers">
         <h1 class="text-capitalize">
-          welcome to <strong class="banner-title">Rythz-POS</strong>
+          welcome to <span class="banner-title"  v-format.bold>Rythz-POS</span>
         </h1>
         <a href="#store" class="btn banner-link my-2">www.rytzh-pos.com</a>
       </b-container>

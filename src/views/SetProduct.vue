@@ -28,13 +28,13 @@
           <table class="table table-responsive-sm">
             <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Product Name</th>
-                <th scope="col">Image</th>
-                <th scope="col">Category</th>
-                <th scope="col">Price</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
+                <th scope="col" v-format.bold>#</th>
+                <th scope="col" v-format.bold>Product Name</th>
+                <th scope="col" v-format.bold>Image</th>
+                <th scope="col" v-format.bold>Category</th>
+                <th scope="col" v-format.bold>Price</th>
+                <th scope="col" v-format.bold>Status</th>
+                <th scope="col" v-format.bold>Action</th>
               </tr>
             </thead>
             <tbody>
