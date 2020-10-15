@@ -28,7 +28,7 @@
               <b-row>
                 <b-col cols="6">
                   <button class="px-2 groupBtn" @click="minQty(item)">-</button>
-                  <button class="px-2 groupBtn" disabled>
+                  <button class="px-0 groupBtn" disabled>
                     {{ item.product_qty }}
                   </button>
                   <button class="px-2 groupBtn" @click="incrementQty(item)">
@@ -36,7 +36,7 @@
                   </button>
                 </b-col>
                 <b-col cols="6" class="text-right"
-                  >Rp. {{ item.product_price * item.product_qty }}</b-col
+                  >Rp. {{ formatRp(item.product_price * item.product_qty) }}</b-col
                 >
               </b-row>
             </div>
@@ -45,11 +45,11 @@
       </b-row>
       <div class="total-order-price">
         <b-row>
-          <b-col cols="6">
+          <b-col cols="7">
             <h5>Total</h5>
-            *Belum termasuk ppn
+            *not include ppn (10%)
           </b-col>
-          <b-col cols="6" class="text-right">Rp. {{ totalPrice() }}</b-col>
+          <b-col cols="5" class="text-right">Rp. {{ formatRp(totalPrice()) }}</b-col>
         </b-row>
       </div>
       <div class="button-checkout">
@@ -73,7 +73,7 @@
       </b-modal>
 
       <!-- MODAL CHECKOUT -->
-      <b-modal hide-footer ref="modal-checkout" title="CHECKOUT BERHASIL">
+      <b-modal hide-footer ref="modal-checkout" title="CHECKOUT SUCCESS">
         <b-row class="mb-2">
           <b-col lg="6" class="text-left">Cashier : {{ user.user_name }}</b-col>
           <b-col lg="6" class="text-right">Receipt no: #{{ invoice }}</b-col>
@@ -81,25 +81,25 @@
         <div class="modal-content">
           <div class="modal-body">
             <b-row v-for="(item, index) in cart" :key="index">
-              <b-col lg="6" class="text-left">
+              <b-col lg="8" class="text-left">
                 <p>
-                  {{ item.product_name }} {{ item.product_qty }}x (@{{
-                    item.product_price
+                  {{ item.product_name }} {{ item.product_qty }}x (@Rp. {{
+                    formatRp(item.product_price)
                   }})
                 </p>
               </b-col>
-              <b-col lg="6" class="text-right">
-                <p>Rp. {{ item.product_price * item.product_qty }}</p>
+              <b-col lg="4" class="text-right">
+                <p>Rp. {{formatRp(item.product_price * item.product_qty)}}</p>
               </b-col>
             </b-row>
             <b-row>
               <b-col lg="6" class="text-left">Ppn 10%</b-col>
               <b-col lg="6" class="text-right">
-                Rp. {{ totalPrice() * 0.1 }}
+                Rp. {{ formatRp(totalPrice() * 0.1) }}
                 <hr />
               </b-col>
               <b-col lg="12" class="text-right"
-                >Total : Rp. {{ totalPrice() + totalPrice() * 0.1 }}</b-col
+                >Total : Rp. {{ formatRp(totalPrice() + totalPrice() * 0.1) }}</b-col
               >
               <b-col lg="12" class="text-left">Payment : Cash</b-col>
             </b-row>
@@ -192,21 +192,20 @@ export default {
       doc.text('Orders : ', 20, 50)
       var itemOrders = []
       for (var i in this.cart) {
-        itemOrders.push(this.cart[i].product_name + '  ' + this.cart[i].product_qty + 'x')
+        itemOrders.push(`${this.cart[i].product_name} ${this.cart[i].product_qty}x (@Rp. ${this.formatRp(this.cart[i].product_price)})`)
       }
       var qtyOrders = []
       for (var j in this.cart) {
-        qtyOrders.push('(@' + this.cart[j].product_price + ') => ' + this.cart[j].product_price * this.cart[j].product_qty)
+        qtyOrders.push(`Rp. ${this.formatRp(this.cart[j].product_price * this.cart[j].product_qty)}`)
       }
-      console.log(itemOrders.length)
-      console.log(qtyOrders.length)
+      const dist = itemOrders.length * 5
       doc.text(itemOrders, 37, 50)
       doc.text(qtyOrders, 140, 50)
-      doc.text('PPN (10%) : ', 20, 50 + (itemOrders.length * 5) + 10)
-      doc.text(`Rp. ${this.totalPrice() * 0.1}`, 140, 50 + (itemOrders.length * 5) + 10)
-      doc.text('Total Price : ', 20, 50 + (itemOrders.length * 5) + 20)
-      doc.text(`Rp. ${this.totalPrice() + (this.totalPrice() * 0.1)}`, 140, 50 + (itemOrders.length * 5) + 20)
-      doc.text('THANK YOU FOR COMING HERE', 71, 50 + (itemOrders.length * 5) + 30)
+      doc.text('PPN (10%) : ', 20, 60 + dist)
+      doc.text(`Rp. ${this.formatRp(this.totalPrice() * 0.1)}`, 140, 60 + dist)
+      doc.text('Total Price : ', 20, 70 + dist)
+      doc.text(`Rp. ${this.formatRp(this.totalPrice() + (this.totalPrice() * 0.1))}`, 140, 70 + dist)
+      doc.text('THANK YOU FOR COMING', 76, 80 + dist)
       doc.save('pdf.pdf')
       this.$refs['modal-checkout'].hide()
       this.cancelOrder()
@@ -221,6 +220,9 @@ export default {
         variant: variant,
         solid: true
       })
+    },
+    formatRp(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     }
   }
 }

@@ -9,7 +9,7 @@
             <h3  v-if="todayIncome === 0 || todayIncome === null">
               <strong>Rp. 0</strong>
             </h3>
-            <h3 v-else><strong>Rp. {{ todayIncome }}</strong></h3>
+            <h3 v-else><strong>Rp. {{ formatRp(todayIncome) }}</strong></h3>
             <h5>+2% Yesterday</h5>
           </b-card>
         </b-col>
@@ -26,7 +26,7 @@
           <b-card class="years-income py-4">
             <h5 class="mb-1">This Years Income</h5>
             <h3 class>
-              <strong>Rp. {{ yearsIncome }}</strong>
+              <strong>Rp. {{ formatRp(yearsIncome) }}</strong>
             </h3>
             <h5>+10% Last Year</h5>
           </b-card>
@@ -111,13 +111,7 @@ export default {
   },
   data() {
     return {
-      // CHART
       periodeOfChart: 'Today',
-
-      // TABEL HISTORY RECENT ORDER
-      history: [],
-      cashier: 'Cashier 1',
-      // dataRecentOrder: [],
       limit: 5,
       currentPage: 1,
       period: ''
@@ -151,8 +145,12 @@ export default {
     ...mapMutations(['setClearDataHistory']),
     chartThisMonth() {
       this.getHistoryChartThisMonth()
-      this.periodeOfChart = 'This Month'
-      this.$router.push('?chart=this-month')
+        .then(response => {
+          this.periodeOfChart = 'This Month'
+          this.$router.push('?chart=this-month')
+        }).catch(error => {
+          console.log(error.response)
+        })
     },
     chartToday() {
       this.periodeOfChart = 'Today'
@@ -161,6 +159,9 @@ export default {
     allTime() {
       this.setClearDataHistory([])
       this.getAllDataHistory()
+    },
+    formatRp(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     }
   }
 }

@@ -104,6 +104,7 @@ export default {
         axios
           .get(`${process.env.VUE_APP_URL}history/chartThisMonth`)
           .then(response => {
+            console.log(response)
             context.commit('setDataChartMonth', response.data)
             resolve(response.data)
           })
