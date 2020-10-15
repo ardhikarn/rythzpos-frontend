@@ -66,7 +66,7 @@
           </b-popover>
         </b-col>
         <b-col cols="7" class="foodItems align-self-center py-4"
-          >Rythz-POS</b-col
+          >{{ this.titleApp }}</b-col
         >
         <CountCart />
       </b-row>
@@ -144,7 +144,7 @@
                         <strong>{{ item.product_name }}</strong>
                       </b-col>
                       <b-col xl="12" class="card-product-price p-0"
-                        >Rp. {{ item.product_price }}</b-col
+                        >Rp. {{formatRp(item.product_price)}}</b-col
                       >
                     </b-row>
                     <!-- BUTTON ICON MAIN PRODUCT -->
@@ -201,10 +201,12 @@
 import CountCart from '../components/CountCart'
 import CartEmpty from '../components/CartEmpty'
 import CartList from '../components/CartList'
+import titled from '../mixins/titled'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Home',
+  mixins: [titled],
   components: {
     CountCart,
     CartEmpty,
@@ -299,6 +301,9 @@ export default {
       // this.$router.push(`?page=${numbPage}`)
       this.setPage(numbPage)
       this.getProducts()
+    },
+    formatRp(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     }
   }
 }
