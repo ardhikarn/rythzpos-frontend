@@ -8,6 +8,11 @@
   src: url('../airbnb/ExtraBold.ttf');
 }
 
+@font-face {
+  font-family: airbnb-medium;
+  src: url('../airbnb/Medium.ttf');
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -86,11 +91,11 @@
 }
 
 .card-product-name {
-  font-size: 23px;
+  font-size: 20px;
 }
 
-.card-product-name {
-  font-size: 18px;
+.card-product-price {
+  font-size: 17px;
 }
 
 .icon-product {

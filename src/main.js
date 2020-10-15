@@ -22,3 +22,16 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+Vue.directive('format', function(el, binding, vnode) {
+  const modifiers = binding.modifiers
+  if (modifiers.extrabold) {
+    el.style.fontFamily = 'airbnb-bold'
+  }
+  if (modifiers.bold) {
+    el.style.fontFamily = 'airbnb-medium'
+  }
+  if (modifiers.highlight) {
+    el.style.background = '#ffff00'
+  }
+})

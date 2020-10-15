@@ -140,8 +140,8 @@
                       </div>
                     </b-card>
                     <b-row class="m-1">
-                      <b-col xl="12" class="card-product-name p-0">
-                        <strong>{{ item.product_name }}</strong>
+                      <b-col xl="12" class="card-product-name p-0" v-format.bold>
+                        {{ item.product_name }}
                       </b-col>
                       <b-col xl="12" class="card-product-price p-0"
                         >Rp. {{formatRp(item.product_price)}}</b-col
