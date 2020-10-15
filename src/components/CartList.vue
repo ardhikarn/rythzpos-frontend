@@ -65,12 +65,13 @@
       <!-- MODAL CONFIRM -->
       <b-modal hide-footer ref="modal-confirm" title="Are You Sure ?">
         <div class="text-right">
-          <b-button @click="closeModalConfirm()">Cancel</b-button>
+          <b-button @click="$refs['modal-confirm'].hide()">Cancel</b-button>
           <b-button @click="postOrder(cart)" class="ml-2" variant="success"
             >OK</b-button
           >
         </div>
       </b-modal>
+
       <!-- MODAL CHECKOUT -->
       <b-modal hide-footer ref="modal-checkout" title="CHECKOUT BERHASIL">
         <b-row class="mb-2">
@@ -103,13 +104,13 @@
               <b-col lg="12" class="text-left">Payment : Cash</b-col>
             </b-row>
             <div class="button-checkout">
-              <b-button
-                @click="closeModalCheckout()"
-                class="text-white mt-3 py-2 my-2"
+              <b-button @click="printCheckout" class="text-white mt-3 py-2 my-2"
                 >Print Checkout</b-button
               >
               <p class="mb-0 text-center">Or</p>
-              <b-button class="text-white py-2 my-2">Send Email</b-button>
+              <b-button class="text-white py-2 my-2" @click="sendEmail"
+                >Send Email</b-button
+              >
             </div>
           </div>
         </div>
@@ -120,6 +121,8 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import Jspdf from 'jspdf'
+
 export default {
   name: 'CartList',
   data() {
@@ -127,6 +130,7 @@ export default {
       addOrders: []
     }
   },
+  created() {},
   computed: {
     ...mapGetters({ cart: 'getCart', user: 'getUser', invoice: 'getInvoice' })
   },
@@ -168,15 +172,55 @@ export default {
         orders: this.addOrders
       }
       this.postOrders(setDataOrder)
-      this.$refs['modal-checkout'].show()
+        .then(response => {
+          this.$refs['modal-checkout'].show()
+          this.$refs['modal-confirm'].hide()
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
-    closeModalConfirm() {
-      this.$refs['modal-confirm'].hide()
-    },
-    closeModalCheckout() {
+    printCheckout() {
+      const doc = new Jspdf()
+      doc.setFont('helvetica')
+      doc.setFontSize(12)
+      doc.text('- Rythz POS -', 10, 10)
+      doc.text(`Date : ${new Date().toJSON().slice(0, 10)}`, 160, 10)
+      doc.text('CHECKOUT SUCCESS', 80, 30)
+      doc.text(`Cashier : ${this.user.user_name}`, 20, 40)
+      doc.text(`Receipt no : #${this.invoice}`, 140, 40)
+      doc.text('Orders : ', 20, 50)
+      var itemOrders = []
+      for (var i in this.cart) {
+        itemOrders.push(this.cart[i].product_name + '  ' + this.cart[i].product_qty + 'x')
+      }
+      var qtyOrders = []
+      for (var j in this.cart) {
+        qtyOrders.push('(@' + this.cart[j].product_price + ') => ' + this.cart[j].product_price * this.cart[j].product_qty)
+      }
+      console.log(itemOrders.length)
+      console.log(qtyOrders.length)
+      doc.text(itemOrders, 37, 50)
+      doc.text(qtyOrders, 140, 50)
+      doc.text('PPN (10%) : ', 20, 50 + (itemOrders.length * 5) + 10)
+      doc.text(`Rp. ${this.totalPrice() * 0.1}`, 140, 50 + (itemOrders.length * 5) + 10)
+      doc.text('Total Price : ', 20, 50 + (itemOrders.length * 5) + 20)
+      doc.text(`Rp. ${this.totalPrice() + (this.totalPrice() * 0.1)}`, 140, 50 + (itemOrders.length * 5) + 20)
+      doc.text('THANK YOU FOR COMING HERE', 71, 50 + (itemOrders.length * 5) + 30)
+      doc.save('pdf.pdf')
       this.$refs['modal-checkout'].hide()
-      this.$refs['modal-confirm'].hide()
       this.cancelOrder()
+      this.makeToast('success', 'Success', 'Order Success')
+    },
+    sendEmail() {
+      console.log('comingsoon')
+    },
+    makeToast(variant, title, message) {
+      this.$bvToast.toast(message, {
+        title: title,
+        variant: variant,
+        solid: true
+      })
     }
   }
 }

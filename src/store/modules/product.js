@@ -36,7 +36,19 @@ export default {
         product_image: payload.product_image,
         product_qty: 1
       }
-      state.cart = [...state.cart, addItemToCart]
+      const fixedData = [...state.cart, addItemToCart]
+      const addedItem = fixedData.find(
+        item => item.product_id === payload.product_id
+      )
+      const existItem = state.cart.find(
+        item => item.product_id === payload.product_id
+      )
+      if (existItem) {
+        addedItem.product_total = payload.product_price * payload.qty
+        addedItem.purchase_qty += 1
+      } else {
+        state.cart = [...state.cart, addItemToCart]
+      }
     },
     removeCart(state, payload) {
       return state.cart.splice(
@@ -125,14 +137,15 @@ export default {
       })
     },
     postOrders(context, payload) {
-      axios
-        .post(`${process.env.VUE_APP_URL}order`, payload)
-        .then(response => {
-          // console.log(response.data)
-          context.commit('setInvoice', response.data.data.invoice)
-          // context.commit('delData', response.data)
-        })
-        .catch(error => error.response)
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${process.env.VUE_APP_URL}order`, payload)
+          .then(response => {
+            context.commit('setInvoice', response.data.data.invoice)
+            resolve(response.data)
+          })
+          .catch(error => reject(error.response))
+      })
     }
   },
   getters: {

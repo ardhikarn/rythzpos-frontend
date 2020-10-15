@@ -6,9 +6,10 @@
         <b-col xl="4" lg="4" md="4" sm="6" cols="12" class="mb-3">
           <b-card class="today-income py-4">
             <h5 class="mb-1">Today's Income</h5>
-            <h3 class>
-              <strong>Rp. {{ todayIncome }}</strong>
+            <h3  v-if="todayIncome === 0 || todayIncome === null">
+              <strong>Rp. 0</strong>
             </h3>
+            <h3 v-else><strong>Rp. {{ todayIncome }}</strong></h3>
             <h5>+2% Yesterday</h5>
           </b-card>
         </b-col>
