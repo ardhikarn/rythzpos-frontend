@@ -2,9 +2,9 @@
   <p align="center">
     <a href="https://rythzpos.netlify.app/">View Demo</a>
     ·
-    <a href="https://github.com/ardhikarn/vue_caffe-shop/issues">Report Bug</a>
+    <a href="https://github.com/ardhikarn/rythzpos-frontend/issues">Report Bug</a>
     ·
-    <a href="https://github.com/ardhikarn/vue_caffe_shop/issues">Request Feature</a>
+    <a href="https://github.com/ardhikarn/rythzpos-frontend/issues">Request Feature</a>
   </p>
 
 ![Image Banner](https://raw.githubusercontent.com/ardhikarn/vue_caffe-shop/master/image-banner.jpg)
@@ -22,11 +22,11 @@ This project is a my front end project, the name is Rythz-POS App. More about Vu
 
 1. <a href="https://nodejs.org/en/download/">Node Js</a>
 2. Node_modules `npm install` or `yarn install`
-3. Rythzpos Backend API [`here`](https://github.com/ardhikarn/API_caffeshop)
+3. Rythzpos Backend API [`here`](https://github.com/ardhikarn/rythzpos-backend-API-)
 
 ## Getting Started
 
-1. Download this Project or you can type `git clone https://github.com/ardhikarn/vue_caffe-shop.git`
+1. Download this Project or you can type `git clone https://github.com/ardhikarn/rythzpos-frontend.git`
 2. Open app's directory in CMD or Terminal
 3. Type `npm install` or `yarn install`
 4. Add .env file at root folder project
