@@ -6,8 +6,6 @@ import History from '../views/History.vue'
 import SetProduct from '../views/SetProduct.vue'
 import SetCategory from '../views/SetCategory.vue'
 import SetUser from '../views/SetUser.vue'
-import Login from '../views/auth/Login.vue'
-import Register from '../views/auth/Register.vue'
 import store from '../store/index'
 
 Vue.use(VueRouter)
@@ -48,18 +46,6 @@ const routes = [
     name: 'SetUser',
     component: SetUser,
     meta: { requiresAuth: true }
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login,
-    meta: { requiresVisitor: true }
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register,
-    meta: { requiresVisitor: true }
   }
 ]
 

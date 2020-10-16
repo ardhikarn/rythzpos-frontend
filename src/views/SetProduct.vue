@@ -28,7 +28,7 @@
           <table class="table table-responsive-sm">
             <thead>
               <tr>
-                <th scope="col" v-format.bold>#</th>
+                <th scope="col" v-format.bold>ID</th>
                 <th scope="col" v-format.bold>Product Name</th>
                 <th scope="col" v-format.bold>Image</th>
                 <th scope="col" v-format.bold>Category</th>
@@ -219,7 +219,6 @@ export default {
       this.form.product_image = event.target.files[0]
     },
     addProduct() {
-      console.log(this.form)
       const data = new FormData()
       data.append('category_id', this.form.category_id)
       data.append('product_name', this.form.product_name)
@@ -269,7 +268,6 @@ export default {
         .catch((error) => this.makeToast('danger', 'Error', error.data.message))
     },
     confirmDelete(data) {
-      console.log(data)
       this.$bvModal
         .msgBoxConfirm(
           `Are you sure want to delete Product ${data.product_name} ?`,

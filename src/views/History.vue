@@ -121,7 +121,6 @@ export default {
     this.getHistoryTodayIncome()
     this.getCountHistoryWeek()
     this.getHistoryYearsIncome()
-    console.log(this.AllHistory)
   },
   computed: {
     ...mapGetters({
@@ -148,8 +147,7 @@ export default {
         .then(response => {
           this.periodeOfChart = 'This Month'
           this.$router.push('?chart=this-month')
-        }).catch(error => {
-          console.log(error.response)
+          this.makeToast('info', 'Information', 'Chart This Month')
         })
     },
     chartToday() {
@@ -159,6 +157,13 @@ export default {
     allTime() {
       this.setClearDataHistory([])
       this.getAllDataHistory()
+    },
+    makeToast(variant, title, message) {
+      this.$bvToast.toast(message, {
+        title: title,
+        variant: variant,
+        solid: true
+      })
     },
     formatRp(value) {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')

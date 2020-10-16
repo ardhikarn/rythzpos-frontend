@@ -78,12 +78,12 @@ export default {
             ) {
               localStorage.removeItem('token')
               context.commit('delUser')
-              router.push('/login')
+              router.push('/')
               alert(error.response.data.message)
             } else if (error.response.data.message === 'jwt expired') {
               localStorage.removeItem('token')
               context.commit('delUser')
-              router.push('/login')
+              router.push('/')
               alert(error.response.data.message)
             }
           }

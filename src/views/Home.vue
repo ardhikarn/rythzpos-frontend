@@ -129,7 +129,7 @@
                 >
                   <b-card>
                     <b-card
-                      :img-src="'http://127.0.0.1:3000/' + item.product_image"
+                      :img-src="URL + item.product_image"
                       img-alt="Image"
                       no-body
                       class

@@ -12,7 +12,7 @@
       <b-row class="mb-4" v-for="(item, index) in cart" :key="index">
         <b-col cols="4" class="pr-0">
           <img
-            v-bind:src="'http://127.0.0.1:3000/' + item.product_image"
+            v-bind:src="URL + item.product_image"
             class="img-order"
           />
         </b-col>
@@ -127,7 +127,8 @@ export default {
   name: 'CartList',
   data() {
     return {
-      addOrders: []
+      addOrders: [],
+      URL: process.env.VUE_APP_URL
     }
   },
   created() {},
@@ -175,9 +176,10 @@ export default {
         .then(response => {
           this.$refs['modal-checkout'].show()
           this.$refs['modal-confirm'].hide()
+          this.makeToast('success', 'Success', 'Order Success')
         })
         .catch(error => {
-          console.log(error)
+          this.makeToast('danger', 'Error', error)
         })
     },
     printCheckout() {
@@ -190,11 +192,11 @@ export default {
       doc.text(`Cashier : ${this.user.user_name}`, 20, 40)
       doc.text(`Receipt no : #${this.invoice}`, 140, 40)
       doc.text('Orders : ', 20, 50)
-      var itemOrders = []
+      const itemOrders = []
       for (var i in this.cart) {
         itemOrders.push(`${this.cart[i].product_name} ${this.cart[i].product_qty}x (@Rp. ${this.formatRp(this.cart[i].product_price)})`)
       }
-      var qtyOrders = []
+      const qtyOrders = []
       for (var j in this.cart) {
         qtyOrders.push(`Rp. ${this.formatRp(this.cart[j].product_price * this.cart[j].product_qty)}`)
       }
@@ -209,10 +211,12 @@ export default {
       doc.save('pdf.pdf')
       this.$refs['modal-checkout'].hide()
       this.cancelOrder()
-      this.makeToast('success', 'Success', 'Order Success')
+      this.makeToast('success', 'Rythz-POS', 'Thank You For Coming')
     },
     sendEmail() {
-      console.log('comingsoon')
+      this.$refs['modal-checkout'].hide()
+      this.cancelOrder()
+      this.makeToast('info', 'Information', 'Comingsoon Feature')
     },
     makeToast(variant, title, message) {
       this.$bvToast.toast(message, {
