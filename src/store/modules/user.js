@@ -49,6 +49,17 @@ export default {
             reject(error.response)
           })
       })
+    },
+    sendEmailOrder(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(
+            `${process.env.VUE_APP_URL}users/send-email-order`,
+            payload
+          )
+          .then(response => resolve(response.data))
+          .catch(error => reject(error.response))
+      })
     }
   },
   getters: {

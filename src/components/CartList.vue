@@ -108,12 +108,33 @@
                 >Print Checkout</b-button
               >
               <p class="mb-0 text-center">Or</p>
-              <b-button class="text-white py-2 my-2" @click="sendEmail"
+              <b-button class="text-white py-2 my-2" @click="$refs['modal-sendEmail'].show()"
                 >Send Email</b-button
               >
             </div>
           </div>
         </div>
+      </b-modal>
+
+      <b-modal hide-footer ref="modal-sendEmail" title="SEND TO EMAIL">
+        <form ref="form" @submit.prevent="onSubmit">
+          <b-form-group
+            label="Email"
+            label-for="email-input"
+            invalid-feedback="Email is required"
+          >
+            <b-form-input
+              type="email"
+              id="email-input"
+              required
+              v-model="form.user_email"
+            ></b-form-input>
+          </b-form-group>
+          <div class="text-right">
+            <b-button @click="$refs['modal-sendEmail'].hide()">Cancel</b-button>
+            <b-button type="submit" class="ml-2" variant="success">OK</b-button>
+          </div>
+        </form>
       </b-modal>
     </b-card>
   </b-col>
@@ -128,7 +149,8 @@ export default {
   data() {
     return {
       addOrders: [],
-      URL: process.env.VUE_APP_URL
+      URL: process.env.VUE_APP_URL,
+      form: {}
     }
   },
   created() {},
@@ -142,7 +164,7 @@ export default {
       'decrementQty',
       'cancelOrder'
     ]),
-    ...mapActions(['postOrders']),
+    ...mapActions(['postOrders', 'sendEmailOrder']),
     minQty(data) {
       if (data.product_qty === 1) {
         this.removeCart(data)
@@ -213,10 +235,20 @@ export default {
       this.cancelOrder()
       this.makeToast('success', 'Rythz-POS', 'Thank You For Coming')
     },
-    sendEmail() {
-      this.$refs['modal-checkout'].hide()
-      this.cancelOrder()
-      this.makeToast('info', 'Information', 'Comingsoon Feature')
+    onSubmit() {
+      const emailOrder = {
+        user_email: this.form.user_email
+      }
+      this.sendEmailOrder(emailOrder)
+        .then((result) => {
+          this.$refs['modal-checkout'].hide()
+          this.$refs['modal-sendEmail'].hide()
+          this.makeToast('success', 'Success', 'Success Send Email')
+          this.cancelOrder()
+        })
+        .catch((error) => {
+          this.makeToast('danger', 'Error', error.response)
+        })
     },
     makeToast(variant, title, message) {
       this.$bvToast.toast(message, {
