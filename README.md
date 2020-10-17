@@ -11,7 +11,7 @@
 
 ## About The Project
 
-This project is a my front end project, the name is Rythz-POS App. More about Vue. [More about Vue](https://en.wikipedia.org/wiki/Vue.js)
+This project is a my front end project, the name is Rythz-POS App.Rythz-POS App is an application website to make it easier for cashiers to make transactions with buyers. Here my frontend uses Vue.Js and my backend uses Node.Js (Express.Js) More about Vue. [More about Vue](https://en.wikipedia.org/wiki/Vue.js)
 
 ## Built With
 
@@ -32,7 +32,7 @@ This project is a my front end project, the name is Rythz-POS App. More about Vu
 4. Add .env file at root folder project
 
 ```sh
-VUE_APP_URL = https://backend-rythzpos.fwdev.online/
+VUE_APP_URL = https://backend-rythzposs.fwdev.online/
 ```
 
 5. Type `npm run serve`

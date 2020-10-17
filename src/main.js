@@ -23,7 +23,7 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-Vue.directive("format", function(el, binding, vnode) {
+Vue.directive('format', function(el, binding, vnode) {
   const modifiers = binding.modifiers
   if (modifiers.extrabold) {
     el.style.fontFamily = 'airbnb-bold'

@@ -121,6 +121,7 @@ export default {
     this.getHistoryTodayIncome()
     this.getCountHistoryWeek()
     this.getHistoryYearsIncome()
+    console.log(this.todayIncome)
   },
   computed: {
     ...mapGetters({
