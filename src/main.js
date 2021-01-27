@@ -10,7 +10,17 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '@fortawesome/fontawesome-free/css/all.css'
+import { LoaderPlugin } from 'vue-google-login'
 
+Vue.use(LoaderPlugin, {
+  client_id:
+    '910434565819-ee994s16afd2h33c8pof42ai4iidrveo.apps.googleusercontent.com'
+})
+
+Vue.GoogleAuth.then(auth2 => {
+  console.log(auth2.isSignedIn.get())
+  console.log(auth2.currentUser.get())
+})
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(Chartkick.use(Chart))

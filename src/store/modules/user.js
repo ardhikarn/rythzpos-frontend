@@ -5,17 +5,16 @@ export default {
     dataUsers: [],
     page: 1,
     limit: 5,
-    search: '',
     totalData: null
   },
   mutations: {
     setDataUser(state, payload) {
-      state.dataUsers = payload.data
+      state.dataUsers = payload.data.result
       state.dataUsers.map(value => {
         value.user_created_at = value.user_created_at.slice(0, 10)
         value.user_updated_at = value.user_updated_at.slice(0, 10)
       })
-      state.totalData = payload.pagination.totalData
+      state.totalData = payload.data.pageInfo.totalData
     },
     setLimitUser(state, payload) {
       state.limit = payload
@@ -41,7 +40,10 @@ export default {
     patchUsers(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .patch(`${process.env.VUE_APP_URL}users/edit/${payload.id}`, payload.form)
+          .patch(
+            `${process.env.VUE_APP_URL}users/edit/${payload.id}`,
+            payload.form
+          )
           .then(response => {
             resolve(response.data)
           })
@@ -53,10 +55,7 @@ export default {
     sendEmailOrder(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .post(
-            `${process.env.VUE_APP_URL}users/send-email-order`,
-            payload
-          )
+          .post(`${process.env.VUE_APP_URL}users/send-email-order`, payload)
           .then(response => resolve(response.data))
           .catch(error => reject(error.response))
       })
