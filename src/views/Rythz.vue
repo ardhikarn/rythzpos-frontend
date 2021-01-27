@@ -2,119 +2,114 @@
   <div class="heightfull">
     <b-navbar toggleable="sm" type="light" variant="light">
       <b-container>
-        <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
         <b-navbar-brand v-format.extrabold>Rythz-POS</b-navbar-brand>
+        <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
         <b-collapse id="nav-text-collapse" is-nav>
           <b-navbar-nav class="ml-auto">
-            <b-nav-text class="mr-5" v-b-modal.modal-login>Login</b-nav-text>
-
-            <!-- MODAL LOGIN -->
-            <b-modal id="modal-login" hide-footer hide-header centered>
-              <b-row class="align-items-center justify-content-center">
-                <b-col xl="10" cols="10">
-                  <h1 v-format.bold>Sign In</h1>
-                  <p class="text-secondary mb-0">
-                    Sign in to Your Account, before shopping
-                  </p>
-                  <hr />
-                  <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
-                    <div class="input-field bg-light my-2 rounded-pill px-2">
-                      <i class="fas fa-user text-center"></i>
-                      <input
-                        required
-                        type="email"
-                        placeholder="User Email"
-                        class="border-0"
-                        v-model="formLogin.user_email"
-                      />
-                    </div>
-                    <div class="input-field bg-light my-3 rounded-pill px-2">
-                      <i class="fas fa-lock text-center"></i>
-                      <input
-                        required
-                        type="password"
-                        placeholder="User Password"
-                        class="border-0"
-                        v-model="formLogin.user_password"
-                      />
-                    </div>
-                    <b-button
-                      type="submit"
-                      class="btn-block mt-4 py-2 rounded-pill"
-                      >Sign in</b-button
-                    >
-                    <b-button
-                      type="reset"
-                      class="btn-block mt-4 py-2 rounded-pill"
-                      >Reset</b-button
-                    >
-                    <p class="text-center my-2">or Forgot Password</p>
-                    <h5 class="text-center mt-4">
-                      Don't have an account ?
-                      <router-link to="/register">
-                        <span>Sign Up</span>
-                      </router-link>
-                    </h5>
-                  </b-form>
-                </b-col>
-              </b-row>
-            </b-modal>
-
+            <b-nav-text class="mr-5" v-b-modal.modal-login>Sign In</b-nav-text>
             <b-nav-text v-b-modal.modal-register>Register</b-nav-text>
 
-            <!-- MODAL REGISTER -->
-            <b-modal id="modal-register" hide-header hide-footer centered>
-              <b-row class="align-items-center justify-content-center">
-                <b-col xl="10" cols="10">
-                  <h1 v-format.bold>Sign Up</h1>
-                  <p class="text-secondary mb-0">Sign up and start shopping</p>
-                  <hr />
-                  <b-form @submit.prevent="addUser">
-                    <div class="input-field bg-light my-3 rounded-pill px-2">
-                      <i class="fas fa-user text-center"></i>
-                      <input
-                        required
-                        type="text"
-                        v-model="formRegis.user_name"
-                        placeholder="User Name"
-                        class="border-0"
-                      />
-                    </div>
-                    <div class="input-field bg-light rounded-pill px-2">
-                      <i class="fas fa-envelope text-center"></i>
-                      <input
-                        required
-                        type="email"
-                        v-model="formRegis.user_email"
-                        placeholder="User Email"
-                        class="border-0"
-                      />
-                    </div>
-                    <div class="input-field bg-light my-3 rounded-pill px-2">
-                      <i class="fas fa-lock text-center"></i>
-                      <input
-                        required
-                        type="password"
-                        v-model="formRegis.user_password"
-                        placeholder="User Password"
-                        class="border-0"
-                      />
-                    </div>
-                    <b-button
-                      type="submit"
-                      class="btn-block mt-4 py-2 rounded-pill"
-                      >Sign up</b-button
-                    >
-                  </b-form>
-                  <h5 class="text-center my-5">
-                    Already have an account ?
-                    <router-link to="/login">
-                      <span>Sign In</span>
+            <!-- MODAL LOGIN -->
+            <Modal
+              modalId="modal-login"
+              title="Sign In"
+              subtitle="Sign in to Your Account, before shopping"
+            >
+              <template #body>
+                <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
+                  <div class="input-field bg-light my-2 rounded-pill px-2">
+                    <i class="fas fa-user text-center"></i>
+                    <input
+                      required
+                      type="email"
+                      placeholder="User Email"
+                      class="border-0"
+                      v-model="formLogin.user_email"
+                    />
+                  </div>
+                  <div class="input-field bg-light my-3 rounded-pill px-2">
+                    <i class="fas fa-lock text-center"></i>
+                    <input
+                      required
+                      type="password"
+                      placeholder="User Password"
+                      class="border-0"
+                      v-model="formLogin.user_password"
+                    />
+                  </div>
+                  <b-button
+                    type="submit"
+                    class="btn-block mt-4 py-2 rounded-pill"
+                    >Sign in</b-button
+                  >
+                  <b-button
+                    type="reset"
+                    class="btn-block mt-4 py-2 rounded-pill"
+                    >Reset</b-button
+                  >
+                  <p class="text-center my-2">or Forgot Password</p>
+                  <h5 class="text-center mt-4">
+                    Don't have an account ?
+                    <router-link to="/register">
+                      <span>Sign Up</span>
                     </router-link>
                   </h5>
-                </b-col>
-              </b-row>
-            </b-modal>
+                </b-form>
+              </template>
+            </Modal>
+
+            <!-- MODAL REGISTER -->
+            <Modal
+              modalId="modal-register"
+              title="Sign Up"
+              subtitle="Sign up and start shopping"
+            >
+              <template #body>
+                <b-form @submit.prevent="addUser">
+                  <div class="input-field bg-light my-3 rounded-pill px-2">
+                    <i class="fas fa-user text-center"></i>
+                    <input
+                      required
+                      type="text"
+                      v-model="formRegis.user_name"
+                      placeholder="User Name"
+                      class="border-0"
+                    />
+                  </div>
+                  <div class="input-field bg-light rounded-pill px-2">
+                    <i class="fas fa-envelope text-center"></i>
+                    <input
+                      required
+                      type="email"
+                      v-model="formRegis.user_email"
+                      placeholder="User Email"
+                      class="border-0"
+                    />
+                  </div>
+                  <div class="input-field bg-light my-3 rounded-pill px-2">
+                    <i class="fas fa-lock text-center"></i>
+                    <input
+                      required
+                      type="password"
+                      v-model="formRegis.user_password"
+                      placeholder="User Password"
+                      class="border-0"
+                    />
+                  </div>
+                  <b-button
+                    type="submit"
+                    class="btn-block mt-4 py-2 rounded-pill"
+                    >Sign up</b-button
+                  >
+                </b-form>
+                <h5 class="text-center my-5">
+                  Already have an account ?
+                  <router-link to="/login">
+                    <span>Sign In</span>
+                  </router-link>
+                </h5>
+              </template>
+            </Modal>
           </b-navbar-nav>
         </b-collapse>
       </b-container>
@@ -133,10 +128,13 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import Modal from '@/components/Modal.vue'
 
 export default {
   name: 'Rythz',
-  components: {},
+  components: {
+    Modal
+  },
   data() {
     return {
       formLogin: {
