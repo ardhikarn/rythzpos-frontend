@@ -3,7 +3,7 @@
     <b-navbar toggleable="sm" type="light" variant="light">
       <b-container>
         <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
-        <b-navbar-brand>Rythz-POS</b-navbar-brand>
+        <b-navbar-brand v-format.extrabold>Rythz-POS</b-navbar-brand>
         <b-collapse id="nav-text-collapse" is-nav>
           <b-navbar-nav class="ml-auto">
             <b-nav-text class="mr-5" v-b-modal.modal-login>Login</b-nav-text>
@@ -55,12 +55,6 @@
                         <span>Sign Up</span>
                       </router-link>
                     </h5>
-                    <GoogleLogin
-                      :params="params"
-                      :onSuccess="onSuccess"
-                      :onFailure="onFailure"
-                      >Login</GoogleLogin
-                    >
                   </b-form>
                 </b-col>
               </b-row>
@@ -118,12 +112,6 @@
                       <span>Sign In</span>
                     </router-link>
                   </h5>
-                  <GoogleLogin
-                    :params="params"
-                    :renderParams="renderParams"
-                    :onSuccess="onSuccess"
-                    :onFailure="onFailure"
-                  ></GoogleLogin>
                 </b-col>
               </b-row>
             </b-modal>
@@ -134,7 +122,8 @@
     <div class="banner">
       <b-container class="text-centers">
         <h1 class="text-capitalize">
-          welcome to <span class="banner-title" v-format.bold>Rythz-POS</span>
+          welcome to
+          <span class="banner-title" v-format.bold>Rythz-POS</span>
         </h1>
         <a href="#store" class="btn banner-link my-2">www.rytzh-pos.com</a>
       </b-container>
@@ -144,13 +133,10 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import GoogleLogin from 'vue-google-login'
 
 export default {
   name: 'Rythz',
-  components: {
-    GoogleLogin
-  },
+  components: {},
   data() {
     return {
       formLogin: {
@@ -161,15 +147,6 @@ export default {
         user_name: '',
         user_email: '',
         user_password: ''
-      },
-      params: {
-        client_id:
-          '910434565819-ee994s16afd2h33c8pof42ai4iidrveo.apps.googleusercontent.com'
-      },
-      renderParams: {
-        width: 250,
-        height: 50,
-        longtitle: true
       }
     }
   },
@@ -179,31 +156,24 @@ export default {
     })
   },
   methods: {
-    onSuccess(googleUser) {
-      console.log(googleUser)
-
-      // This only gets the user information: id, name, imageUrl and email
-      console.log(googleUser.getBasicProfile().cu)
-      console.log(googleUser.getBasicProfile().cu)
-    },
     ...mapActions(['login', 'register']),
     ...mapMutations(['cancelOrder']),
     addUser() {
       this.register(this.formRegis)
-        .then(response => {
+        .then((response) => {
           this.makeToast('info', 'Information', response.message)
           setTimeout(() => {
             this.$bvModal.hide('modal-register')
             // this.$bvModal.show('modal-login')
           }, 4000)
         })
-        .catch(error => {
+        .catch((error) => {
           this.makeToast('danger', 'Error', error.data.message)
         })
     },
     onSubmit() {
       this.login(this.formLogin)
-        .then(response => {
+        .then((response) => {
           this.$router.push('/home')
           this.cancelOrder()
           setTimeout(() => {
@@ -222,7 +192,7 @@ export default {
             }
           }, 500)
         })
-        .catch(error => {
+        .catch((error) => {
           if (
             error.data.message ===
             'Your account is not activate, contact admin for activation'

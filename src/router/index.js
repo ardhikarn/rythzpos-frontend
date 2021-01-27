@@ -69,9 +69,7 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some(record => record.meta.requiresVisitor)) {
     if (store.getters.isLogin) {
-      next({
-        path: '/home'
-      })
+      next(localStorage.removeItem('token'), { path: '/' })
     } else {
       next()
     }
